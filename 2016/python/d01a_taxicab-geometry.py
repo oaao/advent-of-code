@@ -24,7 +24,7 @@ WALK_DIRECTIONS = ["R3", "L2", "L2", "R4", "L1", "R2", "R3", "R4", "L2", "R4", "
 
 
 def dir_ctrl(dist):
-    return [(0, dist), (dist, 0), (0, -dist), (-dist, 0)]
+    return [(0, dist), (dist, 0), (0, -dist), (-dist, 0)]              # [north, east, south, west] movement cases
 
 
 def get_shortest_path(vect_list):
@@ -37,7 +37,7 @@ def get_shortest_path(vect_list):
     for vect in vect_pairs:
         vect_dir  = vect[0]
         vect_dist = vect[1]
-        if vect_dir == 'R':                                            # track direction with CW/CCW turns
+        if vect_dir == 'R':                                            # track direction changes with CW/CCW turns
             direction = (direction + 1) % 4
         elif vect_dir == 'L':
             direction = (direction - 1) % 4
