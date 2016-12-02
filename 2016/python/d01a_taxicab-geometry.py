@@ -44,6 +44,6 @@ def get_shortest_path(vect_list):
         else:
             break                                                      # only allowed to turn L or R
         coord_next = dir_ctrl(vect_dist)[direction]                    # store new coord from direction controller
-        coord = tuple(map(sum, zip(coord, coord_next)))
+        coord = tuple([a+b for (a,b) in zip(coord, coord_next)])
 
     return abs(coord[0]) + abs(coord[1])
