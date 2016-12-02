@@ -32,7 +32,7 @@ def get_shortest_path(vect_list):
     direction = 0                                                      # begin facing north
     coord = (0,0)
 
-    vect_pairs = [(x[0], int(x[1:])) for x in vect_list]                # create list of (direction, distance) tuples
+    vect_pairs = [(x[0], int(x[1:])) for x in vect_list]               # create list of (direction, distance) tuples
 
     for vect in vect_pairs:
         vect_dir  = vect[0]
