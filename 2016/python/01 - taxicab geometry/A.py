@@ -21,11 +21,9 @@ def get_shortest_path(vect_list):
         vect_dist = vect[1]
         if vect_dir == 'R':                                            # track direction changes with CW/CCW turns
             direction = (direction + 1) % 4
-        elif vect_dir == 'L':
+        if vect_dir == 'L':
             direction = (direction - 1) % 4
-        else:
-            break                                                      # only allowed to turn L or R
-        coord_next = direction_ctrl(vect_dist)[direction]                    # store new coord from direction controller
+        coord_next = direction_ctrl(vect_dist)[direction]              # store new coord from direction controller
         coord = tuple([a+b for (a,b) in zip(coord, coord_next)])
 
     return abs(coord[0]) + abs(coord[1])
