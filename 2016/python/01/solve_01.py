@@ -36,4 +36,6 @@ def shortest_path(vectors):                                  # establish Part 1 
 
     return abs(coord[0]) + abs(coord[1])
 
-# print(shortest_path(get_vectors(INPUT)))                     # output Part 1 solution
+v = get_vectors(INPUT)
+
+print(shortest_path(v))                                      # output Part 1 solution
