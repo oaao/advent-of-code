@@ -6,40 +6,36 @@ INPUT = ["R3", "L2", "L2", "R4", "L1", "R2", "R3", "R4", "L2", "R4", "L2", "L5",
 
 
 def direction_ctrl(dist):
-    return [(0, dist), (dist, 0), (0, -dist), (-dist, 0)]              # [north, east, south, west] movement cases
+    return [(0, dist), (dist, 0), (0, -dist), (-dist, 0)]    # [north, east, south, west] movement cases
 
 
-def walk_path(vect_list):
+def get_vectors(instructions):
 
-    direction = 0                                                      # begin facing north
-    coord     = (0, 0)
-    coord_log = [(0, 0), ]
+    direction = 0  # begin facing north
+    vectors   = []
 
-    vect_pairs = [(x[0], int(x[1:])) for x in vect_list]               # create list of (direction, distance) tuples
+    vect_pairs = [(x[0], int(x[1:])) for x in instructions]  # create list of (direction, distance) tuples
 
-    for vect in vect_pairs:
-        vect_dir  = vect[0]
-        vect_dist = vect[1]
-        if vect_dir == 'R':                                            # track direction changes with CW/CCW turns
+    for v in vect_pairs:
+        vect_dir  = v[0]
+        vect_dist = v[1]
+        if vect_dir == 'R':                                  # track direction changes with CW/CCW turns
             direction = (direction + 1) % 4
         if vect_dir == 'L':
             direction = (direction - 1) % 4
-        coord_next = direction_ctrl(vect_dist)[direction]              # store new vector from direction controller
-        coord = tuple([a+b for (a, b) in zip(coord, coord_next)])      # create new positional coord from vector
-        coord_log.append(coord)
+        vector = direction_ctrl(vect_dist)[direction]        # store new vector from direction controller
+        vectors.append(vector)
 
-    return coord_log
-
-
-def get_shortest_path(coords_list):                                    # establish Part 1 solution
-    dest = coords_list[-1]
-    return abs(dest[0]) + abs(dest[1])
+    return vectors
 
 
-def get_first_repeated(coords_list):                                   # establish Part 2 solution
-    pass
+def shortest_path(vectors):                                  # establish Part 1 solution
 
-coords_visited = walk_path(INPUT)
+    coord = (0,0)
 
-print(get_shortest_path(coords_visited))                               # output Part 1 solution
+    for v in vectors:
+        coord = tuple([a + b for a, b in zip(v, coord)])
 
+    return abs(coord[0]) + abs(coord[1])
+
+# print(shortest_path(get_vectors(INPUT)))                     # output Part 1 solution
