@@ -16,14 +16,12 @@ def get_vectors(instructions):
 
     vect_pairs = [(x[0], int(x[1:])) for x in instructions]  # create list of (direction, distance) tuples
 
-    for v in vect_pairs:
-        vect_dir  = v[0]
-        vect_dist = v[1]
-        if vect_dir == 'R':                                  # track direction changes with CW/CCW turns
+    for v_dir, v_dist in vect_pairs:
+        if v_dir == 'R':                                     # track direction changes with CW/CCW turns
             direction = (direction + 1) % 4
-        if vect_dir == 'L':
+        if v_dir == 'L':
             direction = (direction - 1) % 4
-        vector = direction_ctrl(vect_dist)[direction]        # store new vector from direction controller
+        vector = direction_ctrl(v_dist)[direction]           # store new vector from direction controller
         vectors.append(vector)
 
     return vectors
