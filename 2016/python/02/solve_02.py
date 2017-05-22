@@ -11,6 +11,8 @@ instr = {
     'L':  (-1, 0)
 }
 
+# change everything to use sets/enumerate()
+
 
 def kp_gen(size, pad):                                                 # generic generation for keypads
 
@@ -22,24 +24,18 @@ def kp_gen(size, pad):                                                 # generic
     return kp
 
 
-def bound(x, mi, ma):                                                  # disallow movement beyond keypad edges
-    return max(min(x, ma), mi)
-
-
 def kp_nav(moves, start, kp):
 
     coord  = start
-    unique = set(sum(kp, ()))                                          # fastest way to flatten and de-duplicate coords
-    mi, ma = min(unique), max(unique)
 
     for m in moves:
-        unbound = (ta + tb for ta, tb in zip(coord, instr[m]))
-        coord   = tuple(bound(x, mi, ma) for x in unbound)
+        next  = tuple(ta + tb for ta, tb in zip(coord, instr[m]))
+        coord = next if next in kp else coord
 
     return coord
 
 
 kp_A   = kp_gen(3, 0)
-code_A = list(kp_A.index(kp_nav(m, (0, 0), kp_A)) + 1 for m in INPUT)  # look up keypad number for each instruction line
+code_A = list(kp_A.index(kp_nav(l, (0, 0), kp_A)) + 1 for l in INPUT)  # look up keypad number for each instruction line
 
 print(''.join(map(str, code_A)))                                       # output Part A solution
