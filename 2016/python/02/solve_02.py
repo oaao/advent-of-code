@@ -18,16 +18,18 @@ def bound(x, mi, ma):                                                # disallow 
     return max(min(x, ma), mi)
 
 
-def kp_nav(moves, start):
+def kp_nav(moves, start, kp):
 
-    coord = start
+    coord  = start
+    unique = set(sum(kp, ()))                                        # fastest way to flatten and de-duplicate coords
+    mi, ma = min(unique), max(unique)
 
     for m in moves:
         unbound = (ta + tb for ta, tb in zip(coord, instr[m]))
-        coord   = tuple(bound(x, -1, 1) for x in unbound)
+        coord   = tuple(bound(x, mi, ma) for x in unbound)
 
     return coord
 
-code_A = [kp_A.index(kp_nav(m, (0, 0))) + 1 for m in INPUT]          # look up keypad number for each instruction line
+code_A = [kp_A.index(kp_nav(m, (0, 0), kp_A)) + 1 for m in INPUT]    # look up keypad number for each instruction line
 
 print(''.join(map(str, code_A)))                                     # output Part A solution
