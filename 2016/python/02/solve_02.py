@@ -28,9 +28,9 @@ def bound(x, mi, ma):                                              # disallow mo
     return max(min(x, ma), mi)
 
 
-def kp_nav(moves):
+def kp_nav(moves, start):
 
-    coord = (0, 0)
+    coord = start
 
     for m in moves:
         unbound = (ta + tb for ta, tb in zip(coord, instr[m]))
@@ -38,7 +38,6 @@ def kp_nav(moves):
 
     return coord
 
-code = [keypad[kp_nav(m)] for m in INPUT]                          # look up keypad number for each instruction line
+code = [keypad[kp_nav(m, (0, 0))] for m in INPUT]                  # look up keypad number for each instruction line
 
 print(''.join(map(str, code)))                                     # output Part A solution
-
