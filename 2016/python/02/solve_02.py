@@ -17,14 +17,14 @@ def kp_gen(size, pad):                                                    # gene
     d      = int((abs(size) - 1) / 2) if size % 2 == 1 else 0             # build empty for non-(0, 0) size calls
 
     kp_all = [(x, y) for y in range(d, -(d + 1), -1) for x in range(-d, d + 1)]
-    kp     = list(filter(lambda x: abs(x[0]) * abs(x[1]) < pad, kp_all)) if pad != 0 else kp_all
+    kp_pad = list(filter(lambda x: abs(x[0]) * abs(x[1]) < pad, kp_all)) if pad != 0 else kp_all
 
-    return kp
+    return kp_pad
 
 
 def kp_nav(kp, moves, start):
 
-    coord  = start
+    coord = start
 
     for m in moves:
         next  = tuple(ta + tb for ta, tb in zip(coord, instr[m]))
