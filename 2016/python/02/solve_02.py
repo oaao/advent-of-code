@@ -2,7 +2,7 @@
 EXERCISE PROMPT: http://adventofcode.com/2016/day/2
 """
 
-INPUT = list(x.strip('\n') for x in open('input.txt'))                 # get rid of newline; it is not a valid "move"
+INPUT = [x.strip('\n') for x in open('input.txt')]                 # get rid of newline; it is not a valid "move"
 
 instr = {
     'U':  (0, 1),
@@ -16,7 +16,7 @@ def kp_gen(size, pad):                                                 # generic
 
     d      = int((abs(size) - 1) / 2) if size % 2 == 1 else 0          # build empty for non-(0, 0) size calls
 
-    kp_all = list((x, y) for y in range(d, -(d + 1), -1) for x in range(-d, d + 1))
+    kp_all = [(x, y) for y in range(d, -(d + 1), -1) for x in range(-d, d + 1)]
     kp     = list(filter(lambda x: abs(x[0]) * abs(x[1]) < pad, kp_all)) if pad != 0 else kp_all
 
     return kp
@@ -34,10 +34,10 @@ def kp_nav(moves, start, kp):
 
 
 kp_A   = kp_gen(3, 0)
-code_A = list(kp_A.index(kp_nav(c, (0, 0), kp_A)) + 1 for c in INPUT)  # look up keypad number for each instruction line
+code_A = [kp_A.index(kp_nav(c, (0, 0), kp_A)) + 1 for c in INPUT]      # kp "number" is already the coord index
 
 kp_B   = kp_gen(5, 2)
-code_B = list(hex(kp_B.index(kp_nav(c, (-2, 0), kp_B)) + 1)[2:] for c in INPUT)
+code_B = [hex(kp_B.index(kp_nav(c, (-2, 0), kp_B)) + 1)[2:] for c in INPUT]
 
 print(''.join(map(str, code_A)))                                       # output Part A solution
 print(''.join(map(str, code_B)))                                       # output Part B solution
