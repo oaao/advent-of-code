@@ -1,5 +1,5 @@
 """
-EXERCISE PROMPT: http://adventofcode.com/2016/day/2
+EXERCISE PROMPT: http://adventofcode.com/2016/day/3
 """
 
 INPUT = [[int(s) for s in x.split()] for x in open('input.txt')]           # rows turned into lists of int sizes
