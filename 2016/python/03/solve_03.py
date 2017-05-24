@@ -10,7 +10,11 @@ def validate(side_trios):
 
 
 def to_cols(side_trios):                                                   # construct Part B input:
-    return ([a[x], b[x], c[x]] for a, b, c in list(zip(*(iter(side_trios),) * 3)) for x in range(3))
+    return (
+            [a[x], b[x], c[x]]                                             # columns via traversing indices,
+            for a, b, c in list(zip(*(iter(side_trios),) * 3))             # in each triplet of side trios
+            for x in range(3)
+            )
 
 print(len(list(validate(INPUT))))                                          # output Part A answer
 print(len(list(validate(to_cols(INPUT)))))                                 # output Part B answer
