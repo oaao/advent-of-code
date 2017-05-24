@@ -6,7 +6,7 @@ INPUT = ["R3", "L2", "L2", "R4", "L1", "R2", "R3", "R4", "L2", "R4", "L2", "L5",
 
 
 def direction_ctrl(dist):
-    return [(0, dist), (dist, 0), (0, -dist), (-dist, 0)]                    # [north, east, south, west] movement cases
+    return (0, dist), (dist, 0), (0, -dist), (-dist, 0)                    # [north, east, south, west] movement cases
 
 
 def get_vectors(instructions):
@@ -32,7 +32,7 @@ def get_shortest(vectors):                                                 # est
 
     coord = (0,0)
     for vector in vectors:
-        coord = tuple([a + b for a, b in zip(vector, coord)])
+        coord = tuple((a + b for a, b in zip(vector, coord)))
 
     return abs(coord[0]) + abs(coord[1])
 
@@ -48,7 +48,7 @@ def first_repeated(v_steps):
         incr = -1 if a < 0 or b < 0 else 1
         v_incr.append([(0, incr)] * diff if a == 0 else [(incr, 0)] * diff)
 
-    v_indiv = [c for x in v_incr for c in x]
+    v_indiv = (c for x in v_incr for c in x)
 
     for v in v_indiv:
         if len(coords) == len(set(coords)):
@@ -59,5 +59,4 @@ def first_repeated(v_steps):
 vects = get_vectors(INPUT)
 
 print(get_shortest(vects))                                                  # output Part 1 solution
-
 print(first_repeated(vects))                                                # output Part 2 solution
