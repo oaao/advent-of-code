@@ -34,7 +34,7 @@ def kp_nav(kp, moves, start):
 
 
 def kp_code(kp, moves, start):                                            # kp "number" is already the index value
-    return ''.join(map(str, [hex(kp.index(kp_nav(kp, c, start)) + 1)[2:] for c in moves]))
+    return ''.join(map(str, (hex(kp.index(kp_nav(kp, c, start)) + 1)[2:] for c in moves)))
 
 print(kp_code(kp_gen(3, 0), INPUT, (0, 0)))                               # output Part A solution
 print(kp_code(kp_gen(5, 2), INPUT, (-2, 0)))                              # output Part B solution
