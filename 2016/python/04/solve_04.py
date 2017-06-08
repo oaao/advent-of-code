@@ -2,16 +2,16 @@
 EXERCISE PROMPT: http://adventofcode.com/2016/day/4
 """
 
-INPUT = (x.strip('\n').strip(']').replace('-', '').split('[') for x in open('input.txt'))       # pls no regex
+INPUT = (x.strip('\n').strip(']').split('[') for x in open('input.txt'))       # pls no regex
 
 
 def validate_code(code):
 
-    c, i, s = code[0][:-3], int(code[0][-3:]), code[1]                # codename, ID, checksum
+    c, i, s = code[0][:-4], int(code[0][-3:]), code[1]                # codename, ID, checksum
 
     if all(x in c for x in s):                                        # bail unless entire checksum present
 
-        q = list(sorted(((x, c.count(x)) for x in set(c)), key=lambda x: x[1], reverse=True))   # (char, freq) elements
+        q = list(sorted(((x, c.count(x)) for x in set(c.replace('-', ''))), key=lambda x: x[1], reverse=True))
         m = min(list(zip(*q))[1][:5])                                                           # minimum required freq
 
         d = {}                                                        # rip nice expressions w/o operator or collections
@@ -26,6 +26,6 @@ def validate_code(code):
         if f == s:
             return c, i, s
 
-valid_rooms = filter(None, (validate_code(x) for x in INPUT))         # no return for an invalid room, so filter those
+valid_rooms = list(filter(None, (validate_code(x) for x in INPUT)))   # no return for an invalid room, so filter those
 
 print(sum([i for c, i, s in valid_rooms]))                            # output part A answer
