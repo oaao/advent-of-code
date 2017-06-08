@@ -2,7 +2,7 @@
 EXERCISE PROMPT: http://adventofcode.com/2016/day/4
 """
 
-INPUT = (x.strip('\n').strip(']').split('[') for x in open('input.txt'))       # pls no regex
+INPUT = (x.strip('\n').strip(']').split('[') for x in open('input.txt'))        # pls no regex
 
 
 def validate_code(code):
@@ -11,8 +11,8 @@ def validate_code(code):
 
     if all(x in c for x in s):                                        # bail unless entire checksum present
 
-        q = list(sorted(((x, c.count(x)) for x in set(c.replace('-', ''))), key=lambda x: x[1], reverse=True))
-        m = min(list(zip(*q))[1][:5])                                                           # minimum required freq
+        q = sorted(((x, c.count(x)) for x in set(c.replace('-', ''))), key=lambda x: x[1], reverse=True)
+        m = min(list(zip(*q))[1][:5])
 
         d = {}                                                        # rip nice expressions w/o operator or collections
         for x, n in q:
