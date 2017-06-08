@@ -2,27 +2,30 @@
 EXERCISE PROMPT: http://adventofcode.com/2016/day/4
 """
 
-INPUT = (x.strip('\n').strip(']').replace('-', '').split('[') for x in open('input.txt'))  # pls no regex
+INPUT = (x.strip('\n').strip(']').replace('-', '').split('[') for x in open('input.txt'))       # pls no regex
 
-# a) separate code and sector ID, and filter out codes where all checksum chars are not present
-has_all_chksm = (
-                    (c[:-3], c[-3:], s)
-                    for c, s in INPUT
-                    if all(x in c for x in s)
-                )
 
-# b) filter out instances where the five checksum characters are not the five most used
-freqs = (reversed(list(
-                        sorted(
-                            ((x, i[0].count(x)) for x in set(i[0])),
-                            key=lambda x: x[1]
-                            )
-                        )
-                  ) for i in list(has_all_chksm))
+def validate_code(code):
 
-# chksm_most = ((c, i, s) for c, i, s in has_all_chksm if all(list(zip(*x))[0][:5] in c for x in freqs))
+    c, i, s = code[0][:-3], int(code[0][-3:]), code[1]                # codename, ID, checksum
 
-# for i in freqs:
-#    all(list(zip(*i))[0][:5] for i in freqs)
+    if all(x in c for x in s):                                        # bail unless entire checksum present
 
-# c) use 'a' < 'b' comparison to determine alphabetical order for ties ('a' < 'b', for example, returns True)
+        q = list(sorted(((x, c.count(x)) for x in set(c)), key=lambda x: x[1], reverse=True))   # (char, freq) elements
+        m = min(list(zip(*q))[1][:5])                                                           # minimum required freq
+
+        d = {}                                                        # rip nice expressions w/o operator or collections
+        for x, n in q:
+            if n > m:
+                d.setdefault(n, []).append(x)                         # group by freq to solve ties at each freq later
+            elif n == m and x in s:                                   # min req freq chars also need checksum membership
+                d.setdefault(n, []).append(x)
+
+        f = "".join(["".join(sorted(x)) for x in d.values()])         # since e.g. 'a' < 'b' returns True, sort at each
+                                                                      # freq group to alphabetise, then flatten it all
+        if f == s:
+            return c, i, s
+
+valid_rooms = filter(None, (validate_code(x) for x in INPUT))         # no return for an invalid room, so filter those
+
+print(sum([i for c, i, s in valid_rooms]))                            # output part A answer
