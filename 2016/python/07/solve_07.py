@@ -22,9 +22,9 @@ def has_aba(series):
     return ((a, b, c) for _ in series for a, b, c in zip(_, _[1:], _[2:]) if a == c and a != b)
 
 
-def ip_reorder(sn, hn):
-    i_sn = iter(sn + [''])
-    i_hn = iter(hn)
+def ip_reorder(sn, hn):                    # IP begins with first Right value of our "Eithers", so (sn, hn) not (hn, sn)
+    i_sn = iter(sn)
+    i_hn = iter(hn + [''])                 # add empty term to shorter list
     for x in i_sn:
         try:
             y = next(i_hn)
