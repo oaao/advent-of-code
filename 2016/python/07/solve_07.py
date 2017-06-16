@@ -38,9 +38,11 @@ def ip_reorder(sn, hn):
         yield (None, y)
 
 
-def remake_ips(ips):
+def rmk_ips(ips):
     flattened = ([c for c_pair in list(ip_reorder(sn, hn)) for c in c_pair] for hn, sn in ips)
     bracketed = (zip(c, (brkt for i in range(len(list(c))) for brkt in ('[', ']'))) for c in flattened)
+
+    # ip_reorder() leaves a trailing bracket, so we cut off the last element
     return ("".join([c_subel for c_el in list(c_list)[:-1] for c_subel in c_el][:-1]) for c_list in bracketed)
 
 # e.g. 'a[b]c[d]e' can be read from [a, b, c, d, e] depending on element index
@@ -49,11 +51,9 @@ INPUT = (re.split(' ', re.sub('([\[\]])', ' ', _.strip('\n'))) for _ in open('in
 # subgroup  ABBA-unwanted (odd indices inside square brackets) and ABBA-wanted (even were outside)
 grp_h_s = [mk_either(ip, lambda code, seg: code.index(seg) % 2 == 0) for ip in INPUT]
 
-# an empty element, e.g. [], evaluates False:
-can_tls = ((hn, sn) for hn, sn in grp_h_s if set(has_abba(sn)) and not set(has_abba(hn)))
+# an empty element, e.g. [], evaluates False, therefore:
+can_tls = set(rmk_ips((hn, sn) for hn, sn in grp_h_s if set(has_abba(sn)) and not set(has_abba(hn))))
+can_ssl = set(rmk_ips((hn, sn) for hn, sn in grp_h_s for a, b, c in set(has_aba(hn)) if (b, a, b) in set(has_aba(sn))))
 
-can_ssl = ((hn, sn) for hn, sn in grp_h_s for a, b, c in set(has_aba(hn)) if (b, a, b) in set(has_aba(sn)))
-
-print(len(set(remake_ips(can_tls))))                                           # output Part A solution
-print(len(set(remake_ips(can_ssl))))                                           # output Part B solution
-
+print(len(can_tls))                                           # output Part A solution
+print(len(can_ssl))                                           # output Part B solution
