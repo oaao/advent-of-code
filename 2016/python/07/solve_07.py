@@ -4,8 +4,6 @@ EXERCISE PROMPT: http://adventofcode.com/2016/day/7
 
 # NOTE: Choosing to solve this exercise in a manner which preserves IP data, rather than simply arrives at the answer.
 
-import re#eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-
 
 def mk_either(series, condition):
     left, right = [], []
@@ -31,7 +29,7 @@ def rmk_ips(ips):
     return ("".join([c_subel for c_el in list(c_list) for c_subel in c_el])[:-2] for c_list in bracketed)
 
 # e.g. 'a[b]c[d]e' can be read from [a, b, c, d, e] depending on element index
-INPUT = (re.split(' ', re.sub('([\[\]])', ' ', _.strip('\n'))) for _ in open('input.txt'))
+INPUT = (_.strip('\n').replace('[', ']').split(']') for _ in open('input.txt'))
 
 # subgroup  ABBA-unwanted (odd indices inside square brackets) and ABBA-wanted (even were outside)
 grp_h_s = [mk_either(ip, lambda code, seg: code.index(seg) % 2 == 0) for ip in INPUT]
