@@ -9,8 +9,8 @@ import re#eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 
 def mk_either(series, condition):
     left, right = [], []
-    for el in series:
-        right.append(el) if condition(series, el) else left.append(el)
+    for _ in series:
+        right.append(_) if condition(series, _) else left.append(_)
     return left, right
 
 
@@ -26,7 +26,7 @@ def rmk_ips(ips):
 
     # N.B. We have been using (hn, sn) as Left, Right; actual IP starts with sn so order is reversed in zipping.
     flattened = ([c for c_pair in list(zip(sn, hn + [''])) for c in c_pair] for hn, sn in ips)
-    bracketed = (zip(c, (brkt for i in range(len(list(c))) for brkt in ('[', ']'))) for c in flattened)
+    bracketed = (zip(c, (brkt for _ in range(len(list(c))) for brkt in ('[', ']'))) for c in flattened)
 
     # We slice off the last element of the list, because it will be an unneeded trailing '['
     return ("".join([c_subel for c_el in list(c_list)[:-1] for c_subel in c_el][:-1]) for c_list in bracketed)
