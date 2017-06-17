@@ -23,13 +23,12 @@ def has_aba(series):
 
 
 def rmk_ips(ips):
-
     # N.B. We have been using (hn, sn) as Left, Right; actual IP starts with sn so order is reversed in zipping.
     flattened = ([c for c_pair in list(zip(sn, hn + [''])) for c in c_pair] for hn, sn in ips)
     bracketed = (zip(c, (brkt for _ in range(len(list(c))) for brkt in ('[', ']'))) for c in flattened)
 
-    # We slice off the last element of the list, because it will be an unneeded trailing '['
-    return ("".join([c_subel for c_el in list(c_list)[:-1] for c_subel in c_el][:-1]) for c_list in bracketed)
+    # We slice off the last two characters in each resultant string, since they will be trailing brackets.
+    return ("".join([c_subel for c_el in list(c_list) for c_subel in c_el])[:-2] for c_list in bracketed)
 
 # e.g. 'a[b]c[d]e' can be read from [a, b, c, d, e] depending on element index
 INPUT = (re.split(' ', re.sub('([\[\]])', ' ', _.strip('\n'))) for _ in open('input.txt'))
