@@ -22,27 +22,13 @@ def has_aba(series):
     return ((a, b, c) for _ in series for a, b, c in zip(_, _[1:], _[2:]) if a == c and a != b)
 
 
-def ip_reorder(sn, hn):                    # IP begins with first Right value of our "Eithers", so (sn, hn) not (hn, sn)
-    i_sn = iter(sn)
-    i_hn = iter(hn + [''])                 # add empty term to shorter list
-    for x in i_sn:
-        try:
-            y = next(i_hn)
-            yield (x, y)
-        except StopIteration:
-            yield (x,)
-            break
-    for x in i_sn:
-        yield (x,)
-    for y in i_hn:
-        yield (None, y)
-
-
 def rmk_ips(ips):
-    flattened = ([c for c_pair in list(ip_reorder(sn, hn)) for c in c_pair] for hn, sn in ips)
+
+    # N.B. We have been using (hn, sn) as Left, Right; actual IP starts with sn so order is reversed in zipping.
+    flattened = ([c for c_pair in list(zip(sn, hn + [''])) for c in c_pair] for hn, sn in ips)
     bracketed = (zip(c, (brkt for i in range(len(list(c))) for brkt in ('[', ']'))) for c in flattened)
 
-    # ip_reorder() leaves a trailing bracket, so we cut off the last element
+    # We slice off the last element of the list, because it will be an unneeded trailing '['
     return ("".join([c_subel for c_el in list(c_list)[:-1] for c_subel in c_el][:-1]) for c_list in bracketed)
 
 # e.g. 'a[b]c[d]e' can be read from [a, b, c, d, e] depending on element index
