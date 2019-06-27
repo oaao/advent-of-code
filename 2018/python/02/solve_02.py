@@ -18,4 +18,23 @@ def checksum_counts(s):
 factors = sum([Counter(checksum_counts(c)) for c in INPUT], Counter())
 
 
+# part B
+def get_diff_by_one(diffs):
+
+    for a in diffs:
+        for b in diffs:
+
+            diff = 0
+
+            for i in range(len(a)):
+                if a[i] != b[i]:
+                    diff += 1
+
+            if diff == 1:
+                common = [a[i] for i in range(len(a)) if a[i] == b[i]]
+
+                return ''.join(common)
+
+
 print(f'A: {factors[2] * factors[3]}')
+print(f'B: {get_diff_by_one(INPUT)}')
