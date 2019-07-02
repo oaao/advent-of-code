@@ -32,8 +32,6 @@ def apply_claim(claim, matrix):
     for y_pos in range(claim['h']):
         for x_pos in range(claim['w']):
 
-            #import pdb; pdb.set_trace()
-
             if matrix[y + y_pos][x + x_pos] == None:
                 matrix[y + y_pos][x + x_pos] = claim['id']
             else:
