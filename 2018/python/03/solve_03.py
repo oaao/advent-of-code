@@ -14,7 +14,7 @@ def generate_matrix(claims):
     width  = max([(from_left + w) for claim_id, from_left, from_top, w, h in claims])
     height = max([(from_top  + h) for claim_id, from_left, from_top, w, h in claims])
 
-    return [[None] * width] * height
+    return [[None for _x in range(width)] for _y in range(height)]
 
 
 def apply_claim(claim):
