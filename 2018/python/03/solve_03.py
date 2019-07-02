@@ -17,7 +17,23 @@ def generate_matrix(claims):
     return [[None for _x in range(width)] for _y in range(height)]
 
 
-def apply_claim(claim):
-    pass
+def apply_claim(claim, matrix):
 
-generate_matrix(claims)
+    claim_id, x, y, width, height = claim[0], claim[1], claim[2], claim[3], claim[4]
+
+    for y_pos in range(height):
+        for x_pos in range(width):
+
+            #import pdb; pdb.set_trace()
+
+            if matrix[y + y_pos][x + x_pos] == None:
+                matrix[y + y_pos][x + x_pos] = claim_id
+            else:
+                matrix[y + y_pos][x + x_pos] = 'x'
+
+matrix = generate_matrix(claims)
+
+for claim in claims:
+    apply_claim(claim, matrix)
+
+print(f'A: {len([x for y in matrix for x in y if x == "x"])}')
