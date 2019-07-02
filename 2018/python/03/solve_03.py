@@ -31,9 +31,23 @@ def apply_claim(claim, matrix):
             else:
                 matrix[y + y_pos][x + x_pos] = 'x'
 
+# part B
+def find_full_claim(claims, matrix):
+
+    for claim in claims:
+
+        claim_id, width, height = claim[0], claim[3], claim[4]
+
+        full_count = width * height
+        actual_count = len([x for y in matrix for x in y if x == claim_id])
+
+        if full_count == actual_count:
+            return claim_id
+
 matrix = generate_matrix(claims)
 
 for claim in claims:
     apply_claim(claim, matrix)
 
 print(f'A: {len([x for y in matrix for x in y if x == "x"])}')
+print(f'B: {find_full_claim(claims, matrix)}')
