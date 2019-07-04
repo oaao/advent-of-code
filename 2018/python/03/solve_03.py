@@ -42,7 +42,6 @@ def occurrences_in_matrix(element, matrix):
     return len([_x for _y in matrix for _x in _y if _x == element])
 
 
-
 # part B
 def find_full_claim(claims, matrix):
 
