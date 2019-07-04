@@ -1,6 +1,7 @@
 """
 EXERCISE PROMPT: http://adventofcode.com/2018/day/4
 """
+
 import re#ally?????????
 
 from collections import Counter
@@ -82,4 +83,23 @@ laziest_guard  = sorted(
 
 laziest_guard_minute = minutes_asleep[laziest_guard].most_common(1)[0][0]
 
+
+# solve part B
+# piping Counter() objects combines them, taking the max value for common keys
+absolute_laziest_minute = reduce(
+    (lambda x, y: x | y),
+    minutes_asleep.values()
+).most_common(1)[0][0]
+
+most_reliable_sleeper = sorted(
+    [
+        (guard, minutes[absolute_laziest_minute])
+        for guard, minutes in minutes_asleep.items()
+    ],
+    key=lambda x: x[1],
+    reverse=True
+)[0][0]
+
+
 print(f'A: {laziest_guard * laziest_guard_minute}')
+print(f'B: {most_reliable_sleeper * absolute_laziest_minute}')
