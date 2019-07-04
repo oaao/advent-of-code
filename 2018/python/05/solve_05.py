@@ -1,5 +1,5 @@
 """
-EXERCISE PROMPT: http://adventofcode.com/2018/day/4
+EXERCISE PROMPT: http://adventofcode.com/2018/day/5
 """
 
 import re#peated use of this module is becoming unsettling
