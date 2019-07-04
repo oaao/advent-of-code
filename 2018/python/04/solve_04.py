@@ -62,8 +62,6 @@ def get_minutes_asleep(logs):
 
                 guard_minutes[current_guard][minute] += 1
 
-            #import pdb; pdb.set_trace()
-
     return guard_minutes
 
 
