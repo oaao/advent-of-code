@@ -53,4 +53,19 @@ largest_non_infinite_area = next(
 )
 
 
+# part B solution
+def region_with_coords_within(coords, max_distance):
+
+    region_size = sum(
+        sum(
+            abs(_x - coord_x) + abs(_y - coord_y)
+            for coord_x, coord_y in coords
+        ) < max_distance for _x in range(max(list(zip(*coords))[0]))
+                         for _y in range(max(list(zip(*coords))[1]))
+    )
+
+    return region_size
+
+
 print(f'A: {largest_non_infinite_area}')
+print(f'B: {region_with_coords_within(INPUT, 10000)}')
