@@ -2,7 +2,7 @@
 EXERCISE PROMPT: http://adventofcode.com/2018/day/7
 """
 
-# >importing re
+# >importing re lmao
 
 from sys import maxsize
 
