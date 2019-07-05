@@ -9,15 +9,12 @@ from itertools import groupby
 from sys import maxsize
 
 INPUT = [
-    tuple(
-        s
-            .replace(' can begin.', '')
-            .replace('must be finished before step ', '')
-            .replace('Step ', '')
-            .strip('\n')
-            .split(' ')
-    )
-    for s in open('input.txt')
+    (x[1], x[7])
+    for x in
+    [
+        s.strip('\n').split(' ')
+        for s in open('input.txt')
+    ]
 ]
 
 
