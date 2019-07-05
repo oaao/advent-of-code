@@ -26,7 +26,7 @@ def get_next_step(steps, orderings):
 
 def get_step_sequence(steps, orderings):
 
-    order     = ''
+    order = ''
 
     while steps:
 
