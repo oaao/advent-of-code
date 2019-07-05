@@ -1,20 +1,15 @@
 """
-EXERCISE PROMPT: http://adventofcode.com/2018/day/6
+EXERCISE PROMPT: http://adventofcode.com/2018/day/7
 """
 
 # >importing re
 
-from collections import OrderedDict
-from itertools import groupby
 from sys import maxsize
 
 INPUT = [
     (x[1], x[7])
     for x in
-    [
-        s.strip('\n').split(' ')
-        for s in open('input.txt')
-    ]
+    [s.strip('\n').split(' ') for s in open('input.txt')]
 ]
 
 
