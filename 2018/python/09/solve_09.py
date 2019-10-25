@@ -12,8 +12,6 @@ def play_marble_game(players, marbles):
     circle = deque([0])
     scores = {player: 0 for player in range(players)}
 
-    current_marble_index = 0
-
     for next_marble in range(1, marbles+1):
 
         if next_marble % 23 == 0:
