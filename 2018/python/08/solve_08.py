@@ -15,16 +15,26 @@ def parse_tree(data):
     data                 = data[2:]
 
     meta_total = 0
+    root_values = []
 
     for n in range(child_nodes):
-        total, data = parse_tree(data)
-        meta_total     += total
+        total, root_value, data = parse_tree(data)
+        meta_total            += total
+        root_values.append(root_value)
 
     meta_total += sum(data[:meta_count])
 
-    return(meta_total, data[meta_count:])
+    if child_nodes ==0:
+        return(meta_total, sum(data[:meta_count]), data[meta_count:])
+    else:
+        return(
+            meta_total,
+            sum(root_values[n-1] for n in data[:meta_count] if n > 0 and n <= len(root_values)),
+            data[meta_count:]
+        )
 
-total, remaining_data = parse_tree(INPUT)
+total, root_value, remaining_data = parse_tree(INPUT)
 
 # part A solution:
 print(f'A: {total}')
+print(f'B: {root_value}')
