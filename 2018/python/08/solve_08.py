@@ -2,10 +2,6 @@
 EXERCISE PROMPT: http://adventofcode.com/2018/day/8
 """
 
-from string import ascii_uppercase as alphabet
-import pprint
-
-
 INPUT = [int(i) for i in open('input.txt').read().strip('\n').split(' ')]
 
 
