@@ -17,12 +17,12 @@ def play_marble_game(players, marbles):
 
         if next_marble % 23 == 0:
 
-            # player keeps their marble and adds its score
-            scores[next_marble % players] += next_marble
-
-            # player removes the marble 7ccw and adds its score
+            # prepare removal of 7ccw marble
             ccw_marble_index = (len(circle) + current_marble_index - 7) % len(circle)
-            scores[next_marble % players]  += circle.pop(ccw_marble_index)
+
+
+            # add score of player's marble and 7ccw marble
+            scores[next_marble % players]  += next_marble + circle.pop(ccw_marble_index)
 
             # popping an element at a given index means the element to the right of it gets that index
             current_marble_index = ccw_marble_index
