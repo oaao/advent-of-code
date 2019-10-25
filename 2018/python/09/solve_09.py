@@ -2,12 +2,14 @@
 EXERCISE PROMPT: http://adventofcode.com/2018/day/9
 """
 
+from collections import deque
+
 INPUT = tuple(int(s) for s in open('input.txt').read().split() if s.isdigit())
 
 
 def play_marble_game(players, marbles):
 
-    circle = [0, ]
+    circle = deque([0])
     scores = {player: 0 for player in range(players)}
 
     current_marble_index = 0
@@ -16,23 +18,18 @@ def play_marble_game(players, marbles):
 
         if next_marble % 23 == 0:
 
-            # prepare removal of 7ccw marble
-            ccw_marble_index = (len(circle) + current_marble_index - 7) % len(circle)
-
+            circle.rotate(7)
 
             # add score of player's marble and 7ccw marble
-            scores[next_marble % players]  += next_marble + circle.pop(ccw_marble_index)
+            scores[next_marble % players]  += next_marble + circle.pop()
 
             # popping an element at a given index means the element to the right of it gets that index
-            current_marble_index = ccw_marble_index
+            circle.rotate(-1)
 
         else:
 
-            next_marble_index = (current_marble_index + 2) % len(circle)
-
-            circle.insert(next_marble_index, next_marble)
-
-            current_marble_index = next_marble_index
+            circle.rotate(-1)
+            circle.append(next_marble)
 
     return scores
 
