@@ -14,7 +14,6 @@ def play_marble_game(players, marbles):
 
     for next_marble in range(1, marbles+1):
 
-
         if next_marble % 23 == 0:
 
             # prepare removal of 7ccw marble
@@ -43,4 +42,4 @@ players, marbles = INPUT
 print(max(play_marble_game(players, marbles).values()))
 
 # problem B solution
-#print(max(play_marble_game(players, marbles*100).values()))
+print(max(play_marble_game(players, marbles*100).values()))
