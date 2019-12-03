@@ -16,14 +16,12 @@ def recursive_fuel_total(masses):
 
     for m in masses:
 
-        current = m
+        while m > 0:
 
-        while current > 0:
+            m = fuel_per_mass(m)
 
-            current = fuel_per_mass(current)
-
-            if current > 0:
-                recursive_masses.append(current)
+            if m > 0:
+                recursive_masses.append(m)
 
     return recursive_masses
 
