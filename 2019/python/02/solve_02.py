@@ -29,6 +29,7 @@ def run_intcoder(intcodes, noun, verb, instr_length=4):
         elif op not in ([1, 2, 99]):
             raise ValueError(f'invalid opcode {op} in instruction {(op, a, b, loc)}')
 
+    #print(f'Ran {(noun, verb)}, got {state[0]}')
     return state[0]
 
 
@@ -37,11 +38,7 @@ def bruteforce_pair(lowest, highest, output_match):
     pairs = permutations(range(lowest, highest+1), 2)
 
     for p in pairs:
-
-        result = run_intcoder(INPUT, *p)
-        # print(f'Ran: {p}, got: {result}')
-
-        if result == output_match:
+        if run_intcoder(INPUT, *p) == output_match:
             return p
 
 
