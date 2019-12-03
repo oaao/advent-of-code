@@ -8,9 +8,12 @@ from itertools import zip_longest
 INPUT = [int(n) for n in open('input.txt', mode='r', encoding='utf-8').read().split(',')]
 
 
-def run_intcoder(intcodes, instr_length=4):
+def run_intcoder(intcodes, _a, _b, instr_length=4):
 
-    state        = intcodes
+    state    = intcodes
+    state[1] = _a
+    state[2] = _b
+
     _reshape     = [iter(intcodes)] * instr_length
     instructions = zip_longest(*_reshape, fillvalue=None)
 
@@ -29,8 +32,4 @@ def run_intcoder(intcodes, instr_length=4):
 
 
 # part A solution
-A = INPUT
-# as per exercise, A[1] and A[2] adopt a custom state
-A[1] = 12
-A[2] = 2
-print(f'A: {run_intcoder(A)[0]}')
+print(f'A: {run_intcoder(INPUT, 12, 2)[0]}')
