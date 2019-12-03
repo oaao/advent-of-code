@@ -27,4 +27,10 @@ def predict_smallest_bounds_time(data, duration=20000):
 
     return smallest_area, bounds[smallest_area]
 
-start_time = 0.8 * predict_smallest_bounds_time(INPUT)
+
+def display()
+
+bounds, start_time = predict_smallest_bounds_time(INPUT)
+
+display = [[' '] * 200 for n in range(400)]
+
