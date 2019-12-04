@@ -17,7 +17,7 @@ INPUT = [
 def travel_wire(wire):
 
     x, y = 0, 0
-    seen = []
+    seen = [(0, 0), ]
 
     for d, n in wire:
 
@@ -40,7 +40,7 @@ def travel_wire(wire):
 
 def closest_intersection_mhd(wires):
 
-    w1, w2        = [set(travel_wire(w)) for w in INPUT]
+    w1, w2        = [set(travel_wire(w)[1:]) for w in INPUT]
     intersections = w1.intersection(w2)
 
     return min((abs(x) + abs(y)) for x,y in intersections)
