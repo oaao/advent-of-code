@@ -2,6 +2,7 @@
 EXERCISE PROMPT: http://adventofcode.com/2019/day/3
 """
 
+from collections import Counter
 from itertools import chain
 
 INPUT = [
@@ -38,15 +39,37 @@ def travel_wire(wire):
     return seen
 
 
-def closest_intersection_mhd(wires):
+def get_intersections(wires):
 
-    w1, w2        = [set(travel_wire(w)[1:]) for w in INPUT]
+    w1, w2        = [set(travel_wire(w)[1:]) for w in wires]
     intersections = w1.intersection(w2)
 
-    return min((abs(x) + abs(y)) for x,y in intersections)
+    return intersections
+
+
+def _store_steps(wire):
+
+    tracked = {}
+
+    for step, coord in wire:
+        if coord not in tracked:
+            tracked[coord] = step
+
+    return tracked
+
+
+def min_intersection_stepsums(wires):
+
+    stepped = [list(enumerate(travel_wire(wire))) for wire in wires]
+    w1, w2  = [_store_steps(w) for w in stepped]
+
+    tracked = Counter(w1) + Counter(w2)
+
+    return min(tracked[coord] for coord in get_intersections(wires))
 
 
 # part A solution
-print(f'A: {closest_intersection_mhd(INPUT)}')
+print(f'A: {min((abs(x) + abs(y)) for x, y in get_intersections(INPUT))}')
 
 
+print(f'B: {min_intersection_stepsums(INPUT)}')
