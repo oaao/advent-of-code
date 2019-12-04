@@ -31,5 +31,12 @@ def generate_valid_passwords(range_pair):
     return sequentially_valid
 
 
+def must_have_doubles(passwords):
+    return [pw for pw in passwords if any([str(pw).count(i) == 2 for i in str(pw)])]
+
+
 # part A solution
 print(f'A: {len(generate_valid_passwords(INPUT))}')
+
+# part B solution
+print(f'B: {len([pw for pw in generate_valid_passwords(INPUT) if any([str(pw).count(i) == 2 for i in str(pw)])])}')
