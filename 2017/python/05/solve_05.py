@@ -1,5 +1,5 @@
 """
-EXERCISE PROMPT: http://adventofcode.com/2019/day/5
+EXERCISE PROMPT: http://adventofcode.com/2017/day/5
 """
 
 INPUT = [int(x.strip('\n')) for x in open('input.txt', mode='r', encoding='utf-8').readlines()]
