@@ -35,3 +35,14 @@ def travel_slope(
 
 # part A solution
 print(list(travel_slope(INPUT, slope=(3,1), origin=(0,0)).values()).count('#'))
+
+# part B solution
+print(
+	reduce(
+		lambda x, y: x*y, 
+		[
+			list(travel_slope(INPUT, slope=slope, origin=(0,0)).values()).count('#')
+			for slope in [(1,1), (3,1), (5,1), (7,1), (1,2)]
+		]
+	)
+)
