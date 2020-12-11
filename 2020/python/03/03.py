@@ -19,15 +19,17 @@ def travel_slope(
 	origin:  Tuple[int, int] = (0,0)
 ) -> List[Any]:
 
+	# constants
 	x_bound, y_bound = len(pattern[0]), len(pattern)
 
+	# generate initial data
 	x, y      = tuple(map(operator.add, origin, slope))
 	slope_seq = list(pattern[y][x], )
 
 	while y < y_bound - 1:
 
-		_x, _y    = tuple(map(operator.add, (x, y), slope))
-		x, y = (_x % x_bound, _y)
+		_x, _y = tuple(map(operator.add, (x, y), slope))
+		x, y   = (_x % x_bound, _y)
 		slope_seq.append(pattern[y][x])
 
 	return slope_seq
