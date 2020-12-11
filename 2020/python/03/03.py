@@ -2,7 +2,8 @@
 EXERCISE PROMPT: http://adventofcode.com/2020/day/3
 """
 from __future__ import annotations
-from typing import List, Dict, Tuple
+from functools import reduce
+from typing import Any, List, Dict, Tuple
 
 import operator
 
@@ -12,46 +13,25 @@ INPUT = [
 ]
 
 
-class Matrix2D:
-
-	def __init__(self, contents=List[List]) -> None:
-
-		self.contents = contents
-		self.x_bound  = len(contents[0])
-		self.y_bound  = len(contents)
-	
-	def __getitem__(self, coord: Tuple[int, int]):
-
-		x, y = coord
-
-		return self.contents[y][x]
-
-
 def travel_slope(
-	pattern: List[List[str]],
+	pattern: List[List[Any]],
 	slope:   Tuple[int, int],
 	origin:  Tuple[int, int] = (0,0)
 ) -> List[Dict[tuple, str]]:
 
-	pattern   = Matrix2D(pattern)
-	slope     = slope[0], -slope[1]
+	x_bound, y_bound = len(pattern[0]), len(pattern)
 
-	current   = tuple(map(operator.add, origin, slope))
-	slope_seq = {current: pattern[current], }
+	x, y      = tuple(map(operator.add, origin, slope))
+	slope_seq = {(x, y): pattern[y][x], }
 
-	while current[1] < pattern.y_bound - 1:
+	while y < y_bound - 1:
 
-		x, y    = tuple(map(operator.add, current, slope))
-		current = (x % pattern.x_bound, y)
-		slope_seq[current] = pattern[current]
+		_x, _y    = tuple(map(operator.add, (x, y), slope))
+		x, y = (_x % x_bound, _y)
+		slope_seq[x, y] = pattern[y][x]
 
 	return slope_seq
 
 
 # part A solution
-print(
-	list(
-		travel_slope(INPUT, slope=(3,-1), origin=(0,0)).values()
-	).count('#')
-)
-
+print(list(travel_slope(INPUT, slope=(3,1), origin=(0,0)).values()).count('#'))
