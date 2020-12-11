@@ -1,5 +1,5 @@
 """
-EXERCISE PROMPT: http://adventofcode.com/2020/day/1
+EXERCISE PROMPT: http://adventofcode.com/2020/day/2
 """
 import re
 
