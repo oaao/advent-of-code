@@ -13,7 +13,7 @@ INPUT = [
 		]
 
 
-def generate_passports(data: List[str]) -> List[List[str]]:
+def generate_passports(data: List[str]) -> List[Dict[str, str]]:
 
 	grouped = (
 		list(val)
