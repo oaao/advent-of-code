@@ -3,7 +3,7 @@ EXERCISE PROMPT: http://adventofcode.com/2020/day/3
 """
 from __future__ import annotations
 from functools import reduce
-from typing import Any, List, Dict, Tuple
+from typing import Any, List, Tuple
 
 import operator
 
