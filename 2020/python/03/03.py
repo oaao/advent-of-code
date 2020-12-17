@@ -1,11 +1,13 @@
 """
 EXERCISE PROMPT: http://adventofcode.com/2020/day/3
 """
+
 from __future__ import annotations
-from functools import reduce
 from typing import Any, List, Tuple
 
 import operator
+from functools import reduce
+
 
 INPUT = [
 	list(c.strip('\n'))

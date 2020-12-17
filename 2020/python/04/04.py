@@ -5,8 +5,8 @@ EXERCISE PROMPT: http://adventofcode.com/2020/day/4
 from typing import List, Dict
 
 import string
-
 from itertools import groupby
+
 
 INPUT = [
 			field
