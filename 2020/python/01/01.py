@@ -2,6 +2,7 @@
 EXERCISE PROMPT: http://adventofcode.com/2020/day/1
 """
 
+
 INPUT = [int(n.strip('\n')) for n in open('input', mode='r', encoding='utf-8')]
 
 

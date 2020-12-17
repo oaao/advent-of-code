@@ -3,6 +3,7 @@ EXERCISE PROMPT: http://adventofcode.com/2020/day/2
 """
 import re
 
+
 INPUT = [
     re.split(' |-|:', n.strip('\n'))
 	for n in open('input', mode='r', encoding='utf-8')
