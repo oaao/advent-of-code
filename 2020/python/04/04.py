@@ -9,17 +9,17 @@ from itertools import groupby
 
 
 INPUT = [
-			field
-			for line in open('input', mode='r', encoding='utf-8')
-			for field in line.strip('\n').split(' ')
-		]
+	field
+	for line in open('input', mode='r', encoding='utf-8')
+	for field in line.strip('\n').split(' ')
+]
 
 
 def generate_passports(data: List[str]) -> List[Dict[str, str]]:
 
 	grouped = (
 		list(val)
-		for _bool, val in groupby(INPUT, lambda delim: delim == '') if not _bool
+		for _bool, val in groupby(data, lambda delim: delim == '') if not _bool
 	)
 
 	parsed  = (
@@ -59,12 +59,13 @@ def validate_passport(passport: List[Dict[str, str]]) -> Dict[str, bool]:
 	return criteria
 
 
-# part A solution
+# shared objects
 complete_passports: List[Dict[str, str]] = list(
 	passport for passport in generate_passports(INPUT)
 	if all(k in passport for k in {'byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'})
 )
 
+# part A solution
 print(len(complete_passports))
 
 # part B solution
