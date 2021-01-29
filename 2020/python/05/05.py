@@ -2,7 +2,7 @@
 EXERCISE PROMPT: http://adventofcode.com/2020/day/5
 """
 
-from typing import Tuple
+from typing import List, Tuple
 
 from functools import reduce
 
@@ -12,7 +12,17 @@ INPUT = [
 ]
 
 
-# part A solution
-print(max(int(l, 2) for l in INPUT))
+ids = set(int(l, 2) for l in INPUT)
 
-#print(locate_seat('FBFBBFFRLR'))
+
+# part A solution
+print(max(ids))
+
+# part B solution
+print(
+	set(
+		range(max(ids), min(ids), -1)
+	).difference(
+		ids
+	).pop()
+)
