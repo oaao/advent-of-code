@@ -4,7 +4,6 @@ EXERCISE PROMPT: http://adventofcode.com/2020/day/5
 
 from typing import List, Tuple
 
-from functools import reduce
 
 INPUT = [
 	line.translate(line.strip('\n').maketrans('FBLR', '0101'))
