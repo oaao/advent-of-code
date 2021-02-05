@@ -19,3 +19,7 @@ def count_affirmatives(data, consensus=False):
 print(
 	sum(count_affirmatives(INPUT))
 )
+
+print(
+	sum(count_affirmatives(INPUT, consensus=True))
+)
