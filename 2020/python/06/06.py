@@ -3,7 +3,7 @@ EXERCISE PROMPT: http://adventofcode.com/2020/day/6
 """
 
 INPUT = [
-	[set(answer) for answer in group.split('\n')]
+	[set(answer) for answer in group.split('\n') if answer]
 	for group in open('input', mode='r', encoding='utf-8').read().split('\n\n')
 ]
 
