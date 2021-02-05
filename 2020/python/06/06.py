@@ -16,10 +16,6 @@ def count_affirmatives(data, consensus=False):
 
 
 # part A solution
-print(
-	sum(count_affirmatives(INPUT))
-)
-
-print(
-	sum(count_affirmatives(INPUT, consensus=True))
-)
+print(sum(count_affirmatives(INPUT)))
+# part B solution
+print(sum(count_affirmatives(INPUT, consensus=True)))
