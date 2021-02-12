@@ -36,7 +36,30 @@ def get_outermost_bags(ruleset: Dict[str, Dict[str, int]], target_bag: str) -> s
 	return outermost_bags
 
 
+def get_bag_nesting(ruleset: Dict[str, Dict[str, int]], target_bag: str) -> Dict[str, int]:
+
+	bag_tally = dict()
+
+	def recursive_nesting(ruleset, target_bag):
+
+		for bag, count in ruleset[target_bag].items():
+
+			if bag in bag_tally:
+				bag_tally[bag] += count
+			else: 
+				bag_tally[bag] =  count
+
+			for x in range(count):
+				recursive_nesting(ruleset, bag)
+
+	recursive_nesting(ruleset, target_bag)
+
+	return bag_tally
+
+
 ruleset = build_ruleset(INPUT)
 
 # part A solution
 print(len(get_outermost_bags(ruleset, 'shiny gold')))
+# part B solution
+print(sum(get_bag_nesting(ruleset, 'shiny gold').values()))
