@@ -26,6 +26,7 @@ def get_outermost_bags(ruleset: Dict[str, Dict[str, int]], target_bag: str) -> s
 	outermost_bags = set()
 
 	def recursive_parentage(ruleset, target_bag):
+		
 		for bag, contents in ruleset.items():
 			if target_bag in contents:
 				outermost_bags.add(bag)
