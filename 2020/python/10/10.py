@@ -4,6 +4,7 @@ EXERCISE PROMPT: http://adventofcode.com/2020/day/10
 from typing import Dict, List
 
 from collections import defaultdict
+import networkx as nx
 
 INPUT = [int(n.strip('\n'))	for n in open('input', mode='r', encoding='utf-8')]
 
@@ -11,7 +12,9 @@ INPUT = [int(n.strip('\n'))	for n in open('input', mode='r', encoding='utf-8')]
 def get_differences(nums):
 
 	diff_counter = defaultdict(int)
-	seq = list(zip(nums, nums[1:]))
+	
+	nums = [0] + sorted(INPUT) + [max(INPUT) + 3]
+	seq  = list(zip(nums, nums[1:]))
 
 	for a, b in seq:
 		diff_counter[b - a] += 1
@@ -19,44 +22,34 @@ def get_differences(nums):
 	return diff_counter
 
 
-def build_adapter_graph(nums):
+def build_graph_dict(nums):
 
-	graph = {n: [] for n in nums}
+	graph_dict = {n: [] for n in nums}
 
-	for k in graph:
+	for k in graph_dict:
 		for n in nums:
 			if 1 <= n-k <= 3:
-				graph[k].append(n)
+				graph_dict[k].append(n)
 
-	return graph
-
-
-def get_adapter_arrangements(nums):
-	
-	def get_valid_paths(graph, start_node, path=[]):
-
-		path  = path + [start_node]
-		paths = [path]
-
-		for node in graph[start_node]:
-			subpaths = get_valid_paths(graph, node, path)
-			for s in subpaths:
-				paths.append(s)
-
-		return paths
+	return graph_dict
 
 
-	graph        = build_adapter_graph(sorted(nums))
-	arrangements = get_valid_paths(graph, min(nums))
+def get_valid_combo_count(graph_dict):
 
-	return arrangements
+	g     = nx.DiGraph(graph_dict)
+	paths = nx.all_simple_paths(g, min(graph_dict), max(graph_dict))
 
-# universal
-nums = [0] + sorted(INPUT) + [max(INPUT) + 3]
+	count = 0
+
+	for path in paths:
+		count += 1
+
+	return count
+
 
 # part A solution:
-dc = get_differences(nums)
+dc = get_differences(INPUT)
 print(dc[1] * dc[3])
 
 # part B solution: this won't even run
-print(len(get_adapter_arrangements))
+print(get_valid_combo_count(build_graph_dict(INPUT)))
