@@ -18,6 +18,7 @@ diffs = [b-a for a, b in zip(nums, nums[1:])]
 counts = Counter(diffs)
 print(counts[1] * counts[3])
 
+
 # part B solution:
 bottlenecks = sorted({x for diff, n in zip(diffs, nums) for x in {n,n+3} if all((diff == 3, x in nums))})
 
@@ -29,6 +30,19 @@ subpaths[0].pop(1) # cannot skip origin so (1,) is removed from [(0,), (1,), (0,
 
 
 """
+A SMALL MORNING EPIPHANY:
+
+I thought I had quintuple-checked the relationships between abstractable nodes
+("bottlenecks") and the subpath remainders. 
+
+However, I now see that there are some bottlenecks that don't belong:
+
+	e.g. 45-47 is an interval of two, 50-53 has interpolated terms, etc.
+
+I need to diagnose and correct the logic of how bottleneck terms are being
+identified, and then I think it's sorted!
+
+-------------------------------------------------------------------------------
 Leaving this as a reference point, as I'm now stuck on this approach.
 
 I've organised path combinations by pulling out *consecutive* numbers that have
@@ -59,7 +73,7 @@ We can thus predetermine each possible subpath. One would expect that from here
 we can simply multiply the possibilities together:
 
 	>>>functools.reduce(lambda x, y: x * y, (len(sp) for sp in subpaths))
-	6726865579686
+	6726865579686  # too low
 
 However, the output is incorrect, and having tried tons of things, I'm lost!
 
