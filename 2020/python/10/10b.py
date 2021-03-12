@@ -1,6 +1,6 @@
 
 
-def sublist_at_delimiter(iterable, d):
+def sublists_at_delimiter(iterable, d):
 	
 	sublists = []
 	group    = []
@@ -19,7 +19,8 @@ def sublist_at_delimiter(iterable, d):
 	return sublists
 
 
-# -------- EXAMINING THE SEQUENCE OF JUMPS (MAKE SURE ADAPTER LIST IS SORTED) --------
+# ------------ EXAMINING THE SEQUENCE OF JUMPS (MAKE SURE ADAPTER LIST IS SORTED) ------------
+
 
 INPUT = [int(n.strip('\n'))	for n in open('input', mode='r', encoding='utf-8')]
 
@@ -33,26 +34,26 @@ for num, diff in zip(nums, diffs):
 	print(f"Joltage {num} - hops to next: {diff}")
 
 
-# -------- DETERMINE A COMBINATORIAL PATTERN BASED ON DYNAMIC SUBSECTIONS ONLY -------
+# -------- DETERMINE A COMBINATORIAL PATTERN BASED ON DYNAMIC SUBSECTIONS ONLY (ONES) -------
 
 # If the 3's don't matter, then we just need to abstract the stuff in between into a table of generalised possibilities
 
 pattern = {	# nr consecutive ones : nr of combinations
 
 				# start at a 3hop and stop before the next one
-	1 : 1,		#  0 ->  1 ==>                 (0, 1) ==> 1 combination
-	2 : 2,		# 42 -> 46 ==> (42, 46), (42, 45, 46) ==> 2 combinations
-	3 : 4,		# 29 -> 34 ==> lol u think im actually==> 4 combinations
-	4 : 7       #  2 ->  8 ==> gonna write these out  ==> 7 combinations
-
+	1 : 1,		# 132 ->  135 ==>             (132, 135) ==> 1 combination
+	2 : 2,		# 42  ->   46 ==> (42, 46), (42, 45, 46) ==> 2 combinations
+	3 : 4,		# 29  ->   34 ==> lol u think im actually==> 4 combinations
+	4 : 7       #  2  ->    8 ==> gonna write these out  ==> 7 combinations
   # 5 : n/a     in this data pattern, you do not encounter more than a consecutive chain of four 1's
 }
 
 
-# -------------------------- SLAP THAT PATTERN ON YOUR ONES --------------------------
+# ------------------------------ SLAP THAT PATTERN ON YOUR ONES -----------------------------
 
 
-split_out_at_threes  = sublist_at_delimiter(diffs, 3)
+split_out_at_threes  = sublists_at_delimiter(diffs, 3)
+print(split_out_at_threes)
 num_consecutive_ones = [len(sublist) for sublist in split_out_at_threes]
 print(f"\nA count of consecutive ones: \n{num_consecutive_ones}\n")
 
