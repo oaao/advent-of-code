@@ -8,17 +8,8 @@ import functools
 
 INPUT = [
 			[row for row in col]
-			for col in [l.strip('\n') for l in open('input', mode='r', encoding='utf-8')]
+			for col in [l.strip('\n') for l in open('_input', mode='r', encoding='utf-8')]
 		]
-
-"""
-.: floor
- L: empty
- #: occupied
-
-- if a seat is    empty and there are no occupied seats adjacent to it, the seat is occupied
-- if a seat is occupied and four or more seats adjacent to it are also occupied, the seat empties
-"""
 
 
 def show(matrix):
@@ -26,7 +17,7 @@ def show(matrix):
 		print(row)
 
 
-def get_neighbour_counts(row, col, matrix):
+def get_adjacent_neighbours(row, col, matrix):
 
 	counts = Counter([
 		matrix[x][y] for y in range(col-1, col+2)
@@ -40,22 +31,30 @@ def get_neighbour_counts(row, col, matrix):
 	return counts
 
 
-def transform_on_cell(row, col, matrix):
+def determine_cell_by_neighbours(row, col, matrix, method='adjacent'):
 
-	counts = get_neighbour_counts(row, col, matrix)
+	methods = {
+		'adjacent': {
+			'function': get_adjacent_neighbours,
+			'max_neighbours': 4
+		}
+	}
+	max_neighbours = methods[method]['max_neighbours']
+
+	counts = methods[method]['function'](row, col, matrix)
 	cell   = matrix[row][col]
 
 	if cell == 'L' and counts.get('#', 0) == 0:
 		return '#'
-	elif cell == '#' and counts.get('#') >= 4:
+	elif cell == '#' and counts.get('#') >= max_neighbours:
 		return 'L'
 	else:
 		return cell
 
 
-def mutate_one_generation(before):
+def mutate_one_generation(before, method):
 
-	after = deepcopy(before)
+	after  = deepcopy(before)
 
 	for row in range(len(before)):
 		for col in range(len(before[0])):
@@ -63,30 +62,32 @@ def mutate_one_generation(before):
 			if cell == '.':
 				after[row][col] == cell
 			else:
-				after[row][col] = transform_on_cell(row, col, before)
+				after[row][col] = determine_cell_by_neighbours(row, col, before, method)
 
 	return after
 
 
-
-def mutate_until_stasis(before, counter=[]):
+def mutate_until_stasis(before, counter=[], method='adjacent'):
 
 	print(f'iteration {len(counter)}')
-	after = mutate_one_generation(before)
+	after = mutate_one_generation(before, method)
 
 	if after == before:
-		print('achieved STASIS baby')
 		show(after)
+		print('achieved STASIS baby\n')
 		return after
 	else:
 		show(after)
 		print('no match. agane!\n')
-		counter.append('')
-		return mutate_until_stasis(after)
+		counter.append(None)
+		return mutate_until_stasis(after, counter, method)
 
-	return mutate_until_stasis(before)
+	return mutate_until_stasis(before, counter, method)
 
 
+# easy print() toggle, because the stdout is fun for this one
+# import sys, os; sys.stdout = open(os.devnull, 'w')
+	
 # part A solution
 print(
 	[col for row in mutate_until_stasis(INPUT) for col in row].count('#')
