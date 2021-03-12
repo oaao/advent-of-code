@@ -8,8 +8,8 @@ from copy import deepcopy
 
 
 INPUT = [
-    [row for row in col]
-    for col in [l.strip('\n') for l in open('input', mode='r', encoding='utf-8')]
+    [col for col in row]
+    for row in [l.strip('\n') for l in open('input', mode='r', encoding='utf-8')]
 ]
 
 
@@ -29,7 +29,7 @@ def get_neighbour_counts(row, col, matrix):
 
 def get_directional_neighbour_counts(row, col, matrix):
 
-    directions = {(x, y) for x in {-1, 0, 1} for y in {-1, 0, 1}}
+    directions = {(x, y) for y in {-1, 0, 1} for x in {-1, 0, 1}}
     
     directional_neighbours = [
         [None for y in range(0, 3)]
@@ -45,8 +45,8 @@ def get_directional_neighbour_counts(row, col, matrix):
 
         while not satisfied_direction:
 
-            next_row  = row + (x * iteration)
-            next_col  = col + (y * iteration)
+            next_row = row + (x * iteration)
+            next_col = col + (y * iteration)
 
             if 0 <= next_row < len(matrix) and 0 <= next_col < len(matrix[0]):
 
@@ -90,14 +90,12 @@ def determine_cell_by_neighbours(row, col, matrix, method):
 
 def mutate_one_generation(before, method):
 
-    after  = deepcopy(before)
+    after = deepcopy(before)
 
     for row in range(len(before)):
         for col in range(len(before[0])):
             cell = before[row][col]
-            if cell == '.':
-                after[row][col] == cell
-            else:
+            if cell != '.':
                 after[row][col] = determine_cell_by_neighbours(row, col, before, method)
 
     return after
