@@ -2,13 +2,15 @@
 EXERCISE PROMPT: http://adventofcode.com/2020/day/11
 """
 
+import sys, os # for stdout toggling
+
 from collections import Counter
 from copy import deepcopy
-import functools
+
 
 INPUT = [
 			[row for row in col]
-			for col in [l.strip('\n') for l in open('_input', mode='r', encoding='utf-8')]
+			for col in [l.strip('\n') for l in open('input', mode='r', encoding='utf-8')]
 		]
 
 
@@ -17,7 +19,7 @@ def show(matrix):
 		print(row)
 
 
-def get_adjacent_neighbours(row, col, matrix):
+def get_neighbour_counts(row, col, matrix):
 
 	counts = Counter([
 		matrix[x][y] for y in range(col-1, col+2)
@@ -27,16 +29,58 @@ def get_adjacent_neighbours(row, col, matrix):
 		if 0 <= x < len(matrix)
 	])
 
-	counts[matrix[row][col]] -= 1  # self-exclude cell itself
+	counts[matrix[row][col]] -= 1  # self-exclude cell
 	return counts
 
 
-def determine_cell_by_neighbours(row, col, matrix, method='adjacent'):
+def get_directional_neighbour_counts(row, col, matrix):
+
+	directions = {(x, y) for x in {-1, 0, 1} for y in {-1, 0, 1}}
+	
+	directional_neighbours = [
+		[None for y in range(0, 3)]
+		for x in range(0, 3)
+	]
+
+	directional_neighbours[1][1] = matrix[row][col]
+
+	for x, y in directions:
+
+		iteration = 1
+		satisfied_direction = False
+
+		while not satisfied_direction:
+
+			next_row  = row + (x * iteration)
+			next_col  = col + (y * iteration)
+
+			if 0 <= next_row < len(matrix) and 0 <= next_col < len(matrix[0]):
+
+				next_cell = matrix[next_row][next_col]
+
+				if next_cell == '.':
+					iteration += 1
+				else:
+					# (1, 1) is our reference cell for pretend neighbours
+					directional_neighbours[1+x][1+y] = next_cell
+					satisfied_direction = True
+			else:
+				# hitting a matrix boundary negates caring about cell value
+				satisfied_direction = True
+
+	return get_neighbour_counts(1, 1, directional_neighbours)
+
+
+def determine_cell_by_neighbours(row, col, matrix, method):
 
 	methods = {
 		'adjacent': {
-			'function': get_adjacent_neighbours,
+			'function': get_neighbour_counts,
 			'max_neighbours': 4
+		},
+		'directional': {
+			'function': get_directional_neighbour_counts,
+			'max_neighbours': 5
 		}
 	}
 	max_neighbours = methods[method]['max_neighbours']
@@ -67,9 +111,9 @@ def mutate_one_generation(before, method):
 	return after
 
 
-def mutate_until_stasis(before, counter=[], method='adjacent'):
+def mutate_until_stasis(before, method=None, iteration=[None,]):
 
-	print(f'iteration {len(counter)}')
+	print(f'iteration {len(iteration)}')
 	after = mutate_one_generation(before, method)
 
 	if after == before:
@@ -79,16 +123,19 @@ def mutate_until_stasis(before, counter=[], method='adjacent'):
 	else:
 		show(after)
 		print('no match. agane!\n')
-		counter.append(None)
-		return mutate_until_stasis(after, counter, method)
+		iteration.append(None)
+		return mutate_until_stasis(after, method, iteration)
 
-	return mutate_until_stasis(before, counter, method)
+	return mutate_until_stasis(before, method, iteration)
 
 
-# easy print() toggle, because the stdout is fun for this one
-# import sys, os; sys.stdout = open(os.devnull, 'w')
-	
+
 # part A solution
 print(
-	[col for row in mutate_until_stasis(INPUT) for col in row].count('#')
+	[col for row in mutate_until_stasis(INPUT, method='adjacent') for col in row].count('#')
+)
+
+# part B solution
+print(
+	[col for row in mutate_until_stasis(INPUT, method='directional') for col in row].count('#')
 )
