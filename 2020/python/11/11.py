@@ -2,7 +2,6 @@
 EXERCISE PROMPT: http://adventofcode.com/2020/day/11
 """
 
-import sys, os # for stdout toggling
 
 from collections import Counter
 from copy import deepcopy
@@ -12,11 +11,6 @@ INPUT = [
 			[row for row in col]
 			for col in [l.strip('\n') for l in open('input', mode='r', encoding='utf-8')]
 		]
-
-
-def show(matrix):
-	for row in matrix:
-		print(row)
 
 
 def get_neighbour_counts(row, col, matrix):
@@ -61,12 +55,10 @@ def get_directional_neighbour_counts(row, col, matrix):
 				if next_cell == '.':
 					iteration += 1
 				else:
-					# (1, 1) is our reference cell for pretend neighbours
-					directional_neighbours[1+x][1+y] = next_cell
+					directional_neighbours[1+x][1+y] = next_cell # (1, 1) is reference cell
 					satisfied_direction = True
 			else:
-				# hitting a matrix boundary negates caring about cell value
-				satisfied_direction = True
+				satisfied_direction = True # value irrelevant if matrix boundary hit
 
 	return get_neighbour_counts(1, 1, directional_neighbours)
 
@@ -111,22 +103,16 @@ def mutate_one_generation(before, method):
 	return after
 
 
-def mutate_until_stasis(before, method=None, iteration=[None,]):
+def mutate_until_stasis(before, method=None):
 
-	print(f'iteration {len(iteration)}')
 	after = mutate_one_generation(before, method)
 
 	if after == before:
-		show(after)
-		print('achieved STASIS baby\n')
 		return after
 	else:
-		show(after)
-		print('no match. agane!\n')
-		iteration.append(None)
-		return mutate_until_stasis(after, method, iteration)
+		return mutate_until_stasis(after, method)
 
-	return mutate_until_stasis(before, method, iteration)
+	return mutate_until_stasis(before, method)
 
 
 
