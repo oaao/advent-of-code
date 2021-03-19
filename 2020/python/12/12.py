@@ -9,7 +9,7 @@ INPUT = [
 		l[0],
 		int(l[1:].strip('\n'))
 	) 
-	for l in open('input', mode='r', encoding='utf-8')
+	for l in open('_input', mode='r', encoding='utf-8')
 ]
 
 
@@ -22,93 +22,60 @@ def rotate(x, y, angle):
 	)
 
 
-def move(coord, facing, action, val):
+def move(coord, ref, action, val, mode='direction'):
 
 	x, y   = coord
-	dx, dy = facing
-
-	if action not in {'L', 'R'}:
-
-		_facing = facing
-
-		_coord  = {
-			'N': (x,            y + val),
-			'S': (x,            y - val),
-			'E': (x + val,      y),
-			'W': (x - val,      y),
-			'F': (x + dx * val, y + dy * val)
-		}[action]
-
-	else:
-
-		_coord = coord
-		angle  = -val if action == 'R' else val
-
-		_facing = rotate(dx, dy, angle)
-
-	#print(f"Doing {action} {val} from {coord}@{facing} to {_coord}@{facing}")
-	return _coord, _facing
-
-
-def navigate(instructions):
-
-	coord  = (0, 0)
-	facing = (1, 0) # starts facing east
-
-	for action, val in instructions:
-		coord, facing = move(coord, facing, action, val)
-
-	return coord
-
-
-def move_wp(coord, wp, action, val):
-
-	x, y   = coord
-	wx, wy = wp
+	dx, dy = ref # either the directional vector or the offset waypoint
 
 	if action not in {'L', 'R', 'F'}:
 
-		_coord = coord
-		_wp    = {
-			'N': (wx,            wy + val),
-			'S': (wx,            wy - val),
-			'E': (wx + val,      wy),
-			'W': (wx - val,      wy),
+		tx, ty = ref if mode == 'waypoint' else coord
+		_point = {
+			'N': (tx,            ty + val),
+			'S': (tx,            ty - val),
+			'E': (tx + val,      ty),
+			'W': (tx - val,      ty),
 		}[action]
 
-	elif action == 'F':
+		if mode == 'waypoint':
+			_ref   = _point
+			_coord = coord
+		else:
+			_coord = _point
+			_ref   = ref
 
-		_coord = (x + wx * val, y + wy * val)
-		_wp    = wp
+	if action == 'F':
+		_coord = (x + dx * val, y + dy * val)
+		_ref   = ref
 
-	else:
+	elif action in {'L', 'R'}:
 
 		_coord = coord
 		angle  = -val if action == 'R' else val
 
-		_wp = rotate(wx, wy, angle)
+		_ref = rotate(dx, dy, angle)
 
-	print(f"Doing {action} {val} from {coord}@{wp} to {_coord}@{_wp}")
-	return _coord, _wp
+	#print(f"Doing {action} {val} from {coord}@{ref} to {_coord}@{_ref}")
+	return _coord, _ref
 
 
-def navigate_wp(instructions):
+def navigate(instructions, mode='direction'):
 
-	coord  = (0,  0)
-	wp     = (10, 1) # starts 10E 1N of ship
+	coord = (0, 0)
+	ref   = (10, 1) if mode == 'waypoint' else (1, 0)
 
 	for action, val in instructions:
-		coord, wp = move_wp(coord, wp, action, val)
+		coord, ref = move(coord, ref, action, val, mode)
 
 	return coord
 
 
 # part A solution
 print(sum(
-		map(lambda x: abs(x), navigate(INPUT))
+		map(lambda x: abs(x), navigate(INPUT, mode='direction'))
 ))
 
 # part B solution
 print(sum(
-		map(lambda x: abs(x), navigate_wp(INPUT))
+		map(lambda x: abs(x), navigate(INPUT, mode='waypoint'))
 ))
