@@ -9,7 +9,7 @@ INPUT = [
 		l[0],
 		int(l[1:].strip('\n'))
 	) 
-	for l in open('_input', mode='r', encoding='utf-8')
+	for l in open('input', mode='r', encoding='utf-8')
 ]
 
 
@@ -72,7 +72,7 @@ def navigate(instructions, mode='direction'):
 
 # part A solution
 print(sum(
-		map(lambda x: abs(x), navigate(INPUT, mode='direction'))
+		map(lambda x: abs(x), navigate(INPUT))
 ))
 
 # part B solution
