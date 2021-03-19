@@ -13,18 +13,13 @@ INPUT = [
 ]
 
 
-def rotate(x, y, angle, origin=(0,0)):
+def rotate(x, y, angle):
 
 	rads = radians(angle % 360)
-	i, j = origin
-
-	x, y   = x - i, y - j
-	_x, _y = (
+	return (
 		round(x * cos(rads) - y * sin(rads)),
 		round(x * sin(rads) + y * cos(rads))
 	)
-
-	return (_x + i, _y + j)
 
 
 def move(coord, facing, action, val):
