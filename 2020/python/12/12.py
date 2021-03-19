@@ -16,7 +16,7 @@ INPUT = [
 def move(coord, rel, action, val, mode='direction'):
 
 	x, y   = coord
-	dx, dy = rel    # relative element, either direction or the offset waypoint
+	dx, dy = rel    # relative element: directional vector or offset waypoint
 
 	if action not in {'L', 'R', 'F'}:
 
@@ -66,11 +66,11 @@ def navigate(instructions, mode='direction'):
 
 
 # part A solution
-print(sum(
-		map(lambda x: abs(x), navigate(INPUT))
-))
+print(
+	sum(map(abs, navigate(INPUT)))
+)
 
 # part B solution
-print(sum(
-		map(lambda x: abs(x), navigate(INPUT, mode='waypoint'))
-))
+print(
+	sum(map(abs, navigate(INPUT, mode='waypoint')))
+)
