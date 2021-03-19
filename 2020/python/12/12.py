@@ -13,23 +13,14 @@ INPUT = [
 ]
 
 
-def rotate(x, y, angle):
-
-	rads = radians(angle % 360)
-	return (
-		round(x * cos(rads) - y * sin(rads)),
-		round(x * sin(rads) + y * cos(rads))
-	)
-
-
-def move(coord, ref, action, val, mode='direction'):
+def move(coord, rel, action, val, mode='direction'):
 
 	x, y   = coord
-	dx, dy = ref # either the directional vector or the offset waypoint
+	dx, dy = rel    # relative element, either direction or the offset waypoint
 
 	if action not in {'L', 'R', 'F'}:
 
-		tx, ty = ref if mode == 'waypoint' else coord
+		tx, ty = rel if mode == 'waypoint' else coord
 		_point = {
 			'N': (tx,            ty + val),
 			'S': (tx,            ty - val),
@@ -38,34 +29,38 @@ def move(coord, ref, action, val, mode='direction'):
 		}[action]
 
 		if mode == 'waypoint':
-			_ref   = _point
+			_rel   = _point
 			_coord = coord
 		else:
 			_coord = _point
-			_ref   = ref
+			_rel   = rel
 
 	if action == 'F':
 		_coord = (x + dx * val, y + dy * val)
-		_ref   = ref
+		_rel   = rel
 
 	elif action in {'L', 'R'}:
 
 		_coord = coord
 		angle  = -val if action == 'R' else val
+		rads   = radians(angle % 360)
 
-		_ref = rotate(dx, dy, angle)
+		_rel = (
+			round(dx * cos(rads) - dy * sin(rads)),
+			round(dx * sin(rads) + dy * cos(rads))
+		)
 
-	#print(f"Doing {action} {val} from {coord}@{ref} to {_coord}@{_ref}")
-	return _coord, _ref
+	#print(f"Doing {action} {val} from {coord}@{rel} to {_coord}@{_rel}")
+	return _coord, _rel
 
 
 def navigate(instructions, mode='direction'):
 
 	coord = (0, 0)
-	ref   = (10, 1) if mode == 'waypoint' else (1, 0)
+	rel   = (10, 1) if mode == 'waypoint' else (1, 0)
 
 	for action, val in instructions:
-		coord, ref = move(coord, ref, action, val, mode)
+		coord, rel = move(coord, rel, action, val, mode)
 
 	return coord
 
