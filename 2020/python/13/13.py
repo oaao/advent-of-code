@@ -21,14 +21,13 @@ def get_earliest_bus(t, series):
 
 def get_earliest_consecutive_timestamp(series):
 
-	seq   = [(n, delta) for delta, n in enumerate(series) if n != 'x']
-	first = seq[0][0]
-
-	timestamp = 0
-	matched   = {first,}
-
 	def lcm(nums):
 		return reduce(lambda x, y: x * y // gcd(x, y), nums)
+
+	seq = [(n, delta) for delta, n in enumerate(series) if n != 'x']
+
+	timestamp = 0
+	matched   = {seq[0][0],} # first bus "pre-matched" at t=0
 
 	while len(matched) < len(seq):
 
