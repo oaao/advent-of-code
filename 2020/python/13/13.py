@@ -7,12 +7,12 @@ from math import gcd
 t, series = open('input', mode='r', encoding='utf-8')
 
 t = int(t)
-series = [int(s) if s != 'x' else 0 for s in series.split(',')]
+series = [int(s) if s != 'x' else s for s in series.split(',')]
 
 
 def get_earliest_bus(t, series):
 	waits = {
-		n - (t % n): n for n in series if n > 0
+		n - (t % n): n for n in series if n != 'x'
 	}
 
 	min_wait = min(waits)
@@ -21,7 +21,7 @@ def get_earliest_bus(t, series):
 
 def get_earliest_consecutive_timestamp(series):
 
-	seq   = [(n, delta) for delta, n in enumerate(series) if n > 0]
+	seq   = [(n, delta) for delta, n in enumerate(series) if n != 'x']
 	first = seq[0][0]
 
 	timestamp = 0
