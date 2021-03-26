@@ -5,7 +5,7 @@ EXERCISE PROMPT: http://adventofcode.com/2020/day/13
 t, series = open('input', mode='r', encoding='utf-8')
 
 t = int(t)
-series = {int(s) for s in series.split(',') if s != 'x'}
+series = [int(s) for s in series.split(',') if s != 'x']
 
 
 def get_earliest_bus(t, series):
