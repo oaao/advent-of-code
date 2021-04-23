@@ -24,8 +24,11 @@ def parse_input(filename='input'):
 	ticket  = tuple(int(s) for s in ticket.split(','))
 
 	nearby_tickets = tuple(
-		tuple(int(s) for s in ln.split(','))
-		for ln in nearby_tickets
+		(
+			i,
+			tuple(int(s) for s in ln.split(','))
+		)
+		for i, ln in enumerate(nearby_tickets)
 	)
 
 	return rules, ticket, nearby_tickets
@@ -71,20 +74,31 @@ def reduce_ruleset_ranges(ruleset):
 	return reduced
 
 
-def get_bad_ticket_values(ranges, tickets):
+def get_bad_tickets_and_values(ranges, tickets):
 
-	bad_values = []
+	bad_tickets = []
 
-	for ticket in tickets:
+	for i, ticket in tickets:
+
+		bad_values = []
+
 		for n in ticket:
 			if not any(lower <= n <= upper for lower, upper in ranges):
 				bad_values.append(n)
 
-	return bad_values
+		if bad_values:
+			bad_tickets.append(
+				(i, ticket, bad_values)
+			)
+
+	return bad_tickets
 
 
 RULES, TICKET, NEARBY_TICKETS = parse_input()
 
 # part A solution
-ranges = reduce_ruleset_ranges(parse_rules(RULES))
-print(sum(get_bad_ticket_values(ranges, NEARBY_TICKETS)))
+ranges      = reduce_ruleset_ranges(parse_rules(RULES))
+bad_tickets = get_bad_tickets_and_values(ranges, NEARBY_TICKETS)
+print(sum((n for i, ticket, vals in bad_tickets for n in vals)))
+
+# part B solution
