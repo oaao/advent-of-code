@@ -2,10 +2,6 @@
 EXERCISE PROMPT: http://adventofcode.com/2020/day/16
 """
 
-def show(iterable):
-	import pprint
-	pprint.pprint(iterable, indent=2)
-
 
 def parse_input(filename='input'):
 	"""Parse input file into operable terms."""
@@ -24,10 +20,7 @@ def parse_input(filename='input'):
 	ticket  = tuple(int(s) for s in ticket.split(','))
 
 	nearby_tickets = tuple(
-		(
-			i,
-			tuple(int(s) for s in ln.split(','))
-		)
+		(i, tuple(int(s) for s in ln.split(',')))
 		for i, ln in enumerate(nearby_tickets)
 	)
 
@@ -51,6 +44,7 @@ def parse_rules(rules):
 	return ruleset
 
 
+# as it turns out, this was completely unnecessary. nice
 def reduce_ruleset_ranges(ruleset):
 	"""Mathematically reduce ruleset ranges because I can guess what's coming..."""
 
@@ -68,13 +62,14 @@ def reduce_ruleset_ranges(ruleset):
 			reduced[-1] = (smaller_pair[0], higher_max)
 			# print(f"Modified most recent range to: {(smaller_pair[0], higher_max)}")
 		else:
-			# print(f"Added: {pair}")
+			# print(f"Added: {pair} as most recent range")
 			reduced.append(pair)
 
 	return reduced
 
 
-def get_bad_tickets_and_values(ranges, tickets):
+def get_invalid_tickets_and_values(ranges, tickets):
+	"""Get an enumerated list of bad tickets and invalid values within each."""
 
 	bad_tickets = []
 
@@ -94,11 +89,64 @@ def get_bad_tickets_and_values(ranges, tickets):
 	return bad_tickets
 
 
+def get_valid_tickets(tickets, rules):
+	"""Get a filtered list of only tickets with no invalid values."""
+
+	ranges  = reduce_ruleset_ranges(parse_rules(rules))
+	bad_ids = {i for i, _, _ in get_invalid_tickets_and_values(ranges, tickets)}
+
+	filtered = tuple(t for i, t in tickets if i not in bad_ids)
+
+	return filtered
+
+
+def match_possible_ticket_rows(tickets, rules):
+	"""Determine which ticket columns *can* match which fields."""
+
+	tickets = get_valid_tickets(tickets, rules)
+	ruleset = parse_rules(rules)
+
+	inverse    = tuple(zip(*tickets))
+	candidates = list(ruleset.keys()) # need mutability; we gon be poppin'
+	matches    = {cand: [] for cand in candidates}
+
+	# forgive me
+	for i, column in enumerate(inverse):
+		for cand in candidates:
+			if all(any(lower <= n <= upper for lower, upper in ruleset[cand]) for n in column):
+				matches[cand].append(i)
+
+	return matches
+
+
+def match_exact_ticket_rows(tickets, rules):
+
+	possible = match_possible_ticket_rows(tickets, rules)
+	exact    = {}
+
+	while possible:
+		# sort by list length so we can just work in sequence:
+		for k, v in sorted(possible.items(), key=lambda d: len(d[1])):
+			if len(v) == 1:
+				n, = possible.pop(k, None)
+				exact[k] = n
+				for _, values in possible.items():
+					values.remove(n)
+
+	return exact
+
+
 RULES, TICKET, NEARBY_TICKETS = parse_input()
 
 # part A solution
-ranges      = reduce_ruleset_ranges(parse_rules(RULES))
-bad_tickets = get_bad_tickets_and_values(ranges, NEARBY_TICKETS)
-print(sum((n for i, ticket, vals in bad_tickets for n in vals)))
+ranges = reduce_ruleset_ranges(parse_rules(RULES))
+print(sum((n for i, tk, vals in get_invalid_tickets_and_values(ranges, NEARBY_TICKETS) for n in vals)))
 
 # part B solution
+from functools import reduce
+print(
+	reduce(
+		lambda x, y: x * y,
+		{TICKET[v] for k, v in match_exact_ticket_rows(NEARBY_TICKETS, RULES).items() if k.startswith('departure')}
+	)
+)
