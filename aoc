@@ -8,7 +8,7 @@ set -o noclobber
 # validator constants -------------------------------------------------------------------
 VALID_ACTIONS=("init")
 VALID_YEARS=($(seq 2015 1 2021))
-VALID_LANGS=("python" "scala" "rust" "typescript")
+VALID_LANGS=("python" "scala" "rust" "typescript" "haskell" "go" "kotlin" "ruby")
 
 # input constants -----------------------------------------------------------------------
 declare -A EXTENSIONS
@@ -17,6 +17,10 @@ EXTENSIONS+=(
 	["scala"]="scala"
 	["rust"]="rs"
 	["typescript"]="ts"
+	["haskell"]="hs"
+	["go"]="go"
+	["kotlin"]="kt"
+	["ruby"]="rb"
 )
 
 # arg processing ------------------------------------------------------------------------
@@ -42,8 +46,14 @@ function get_template_for_lang {
 		python)
 			printf '"""\n'"${CONTENT}"'\n"""\n'
 			;;
-		scala|rust|typescript)
+		scala|rust|typescript|go|kotlin)
 			printf "// ${CONTENT}\n"
+			;;
+		haskell)
+			printf "-- ${CONTENT}\n"
+			;;
+		ruby)
+			printf "# ${CONTENT}\n"
 			;;
 	esac
 }
