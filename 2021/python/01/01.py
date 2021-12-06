@@ -20,7 +20,7 @@ print(
 		filter(
 			lambda depth_sums: depth_sums[1] > depth_sums[0],
 			pairwise(
-				(sum((a, b, c)) for a, b, c in zip(INPUT, INPUT[1:], INPUT[2:]))
+				(sum((a, b, c)) for (a, _), (b, c) in pairwise(pairwise(INPUT)))
 			)
 		)
 	)
