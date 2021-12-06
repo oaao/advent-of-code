@@ -39,7 +39,7 @@ function validate_membership {
 # function definitions - HELPERS - init -------------------------------------------------
 function get_template_for_lang {
 	YEAR=$1; LANG=$2; DAY=$3
-	CONTENT="EXERCISE PROMPT: http://adventofcode.com/${YEAR}/day/${DAY}"
+	CONTENT="EXERCISE PROMPT: http://adventofcode.com/${YEAR}/day/$(sed 's/^0*//' <<< $DAY)"
 	case $LANG in
 		python)
 			printf '"""\n'"${CONTENT}"'\n"""\n'

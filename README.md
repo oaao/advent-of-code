@@ -20,7 +20,7 @@ $ ls 2021/python/01
 01.py  input
 $ cat 2021/python/01/01.py
 """
-EXERCISE PROMPT: http://adventofcode.com/2021/day/01
+EXERCISE PROMPT: http://adventofcode.com/2021/day/1
 """
 ```
 
