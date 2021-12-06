@@ -1,0 +1,75 @@
+#!/bin/bash
+# this could be loads nicer but i just need it to do THE THING
+
+# ENSURE files can't be overwritten with > (only >|)
+# i always have this on, but hey just in case i get a lobotomy sometime!!!!
+set -o noclobber
+
+# validator constants -------------------------------------------------------------------
+VALID_ACTIONS=("init")
+VALID_YEARS=($(seq 2015 1 2021))
+VALID_LANGS=("python" "scala" "rust" "typescript")
+
+# input constants -----------------------------------------------------------------------
+declare -A EXTENSIONS
+EXTENSIONS+=(
+	["python"]="py"
+	["scala"]="scala"
+	["rust"]="rs"
+	["typescript"]="ts"
+)
+
+# arg processing ------------------------------------------------------------------------
+ACTION=$1
+shift
+PARAMS=(${@})
+
+# function definitions - GENERAL --------------------------------------------------------
+function validate_membership {
+	INPUT=$1; PRETTY=$2; shift 2; ARRAY=$@
+	if [[ ! "${ARRAY[*]}" =~ "${INPUT}" ]]; then
+		echo "Invalid ${PRETTY}: ${INPUT}"
+		echo "Valid ${PRETTY}s are: [ ${ARRAY[*]} ]"
+		exit 1
+	fi
+}
+
+# function definitions - HELPERS - init -------------------------------------------------
+function get_template_for_lang {
+	YEAR=$1; LANG=$2; DAY=$3
+	CONTENT="EXERCISE PROMPT: http://adventofcode.com/${YEAR}/day/${DAY}"
+	case $LANG in
+		python)
+			printf '"""\n'"${CONTENT}"'\n"""\n'
+			;;
+		scala|rust|typescript)
+			printf "// ${CONTENT}\n"
+			;;
+	esac
+}
+
+function generate_for_language {
+	YEAR=$1; LANG=$2
+	for DAY in {01..31}
+	do
+		DAY_PATH="${YEAR}/${LANG}/${DAY}"
+		mkdir -pv $DAY_PATH
+		touch "${DAY_PATH}/input"
+		get_template_for_lang $YEAR $LANG $DAY > "$DAY_PATH/$DAY.${EXTENSIONS[${LANG}]}"
+	done
+}
+
+# function definitions - ACTIONS --------------------------------------------------------
+function action_init {
+	[[ ! "${#PARAMS[@]}" -eq 2 ]] && { echo "Try: aoc init {year} {language}"; exit 1; }
+	YEAR="${PARAMS[0]}"
+	LANG="${PARAMS[1]}"
+	validate_membership $YEAR "year" ${VALID_YEARS[*]}
+	validate_membership $LANG "language" ${VALID_LANGS[*]}
+	generate_for_language $YEAR $LANG
+	echo "Finished generating for: [ $LANG@$YEAR ]"
+}
+
+# execution  ----------------------------------------------------------------------------
+validate_membership $ACTION "action" ${VALID_ACTIONS[*]}
+$"action_${ACTION}"
