@@ -6,8 +6,9 @@
 set -o noclobber
 
 # validator constants -------------------------------------------------------------------
+[[ $(date +"%m") -eq "12" ]] && MAX_YEAR=$(date +"%Y") || MAX_YEAR=$(($(date +"%Y")-1))
+VALID_YEARS=($(seq 2015 1 "$MAX_YEAR"))
 VALID_ACTIONS=("init")
-VALID_YEARS=($(seq 2015 1 2021))
 VALID_LANGS=("python" "scala" "rust" "typescript" "haskell" "go" "kotlin" "ruby")
 
 # input constants -----------------------------------------------------------------------
