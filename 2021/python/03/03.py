@@ -8,24 +8,37 @@ from itertools import tee
 INPUT = [list(map(int, s.strip('\n'))) for s in open('input', mode='r', encoding='utf-8')]
 
 
-# part A
-_len = len(INPUT)                 #  inv matrix element count; only calc once
-most_common_digits = map(
-	round,                        #  nearest-int round of float sum -> most common
-	map(
-		lambda n: sum(n) / _len,  #  weigh sum vs. _len, since 0..1
-		zip(*INPUT)               #  simple matrix inversion
+def commonest_per_pos(matrix):
+	_len = len(matrix)                #  inv matrix element count; only calc once
+	return map(
+		round,                        #  nearest-int round -> commonest
+		map(
+			lambda n: sum(n) / _len,  #  weigh sum vs. _len, since 0..1
+			zip(*matrix)              #  simple matrix inversion
+		)
 	)
-)
 
-a, b = tee(most_common_digits)
-b    = map(lambda x: int(operator.__not__(x)), b)  # int-as-bool shenanigans
+
+def counterpart_bindigit_pair(bindigits):
+	a, b = tee(bindigits)
+	return (
+		a, 
+		map(lambda x: int(operator.__not__(x)), b)  # int-as-bool inversion
+	)
+
+
+def bindigits_to_int(digits_iter):
+	return int(''.join(map(str, digits_iter)), 2)
 
 
 # part A solution
 print(
 	operator.mul(
-		int(''.join(map(str, a)), 2),
-		int(''.join(map(str, b)), 2)
+		*map(
+			bindigits_to_int,
+			counterpart_bindigit_pair(
+				commonest_per_pos(INPUT)
+			)
+		)
 	)
 )
