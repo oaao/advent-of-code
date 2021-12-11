@@ -15,6 +15,7 @@ INPUT = list(
 )
 
 
+# part A
 def sums_by_key(keys, pairwise_seq):
     d = dict.fromkeys(keys, 0)
     for k, v in pairwise_seq:
@@ -25,6 +26,7 @@ def sums_by_key(keys, pairwise_seq):
 d = sums_by_key({"forward", "down", "up"}, INPUT)
 
 
+# part B
 d_aim = dict.fromkeys({"aim", "forward", "depth"}, 0)
 for term, n in INPUT:
     match term:
