@@ -7,6 +7,7 @@ from itertools import pairwise
 
 INPUT = [int(n.strip('\n')) for n in open('input', mode='r', encoding='utf-8')]
 
+
 # part A solution
 print(
 	sum(1 for _ in  # disgusting "generator len counter"
