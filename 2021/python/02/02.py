@@ -21,7 +21,20 @@ def sums_by_key(keys, pairwise_seq):
         d[k] += v
     return d
 
+
 d = sums_by_key({"forward", "down", "up"}, INPUT)
+
+
+d_aim = dict.fromkeys({"aim", "forward", "depth"}, 0)
+for term, n in INPUT:
+    match term:
+        case "down":
+            d_aim["aim"] += n
+        case "up":
+            d_aim["aim"] -= n
+        case "forward":
+            d_aim["forward"] += n
+            d_aim["depth"] += d_aim["aim"] * n
 
 
 # part A solution
@@ -29,5 +42,13 @@ print(
     operator.mul(
         d["forward"],
         d["down"] - d["up"]
+    )
+)
+
+# part B solution
+print(
+    operator.mul(
+        d_aim["forward"],
+        d_aim["depth"]
     )
 )
