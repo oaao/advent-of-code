@@ -23,7 +23,7 @@ def counterpart_bindigit_pair(bindigits):
 	a, b = tee(bindigits)
 	return (
 		a, 
-		map(lambda x: int(operator.__not__(x)), b)  # int-as-bool inversion
+		map(lambda x: (1, 0)[x], b)  # tuple-index inversion
 	)
 
 
