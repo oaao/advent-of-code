@@ -2,8 +2,6 @@
 EXERCISE PROMPT: http://adventofcode.com/2021/day/4
 """
 
-import operator
-
 
 DRAW_SEQ, *BOARDS = [s.strip('\n') for s in open('input', mode='r', encoding='utf-8')]
 
@@ -36,16 +34,9 @@ def get_draws_and_winner(draw_seq, boards):
 				return drawn, board
 
 
+def calc_winner_score(draws, board):
+	return draws[-1] * sum(filter(lambda n: n not in draws, (n for row in board for n in row)))
+
+
 # part A solution
-draws, winner = get_draws_and_winner(draw_seq, boards)
-print(
-	operator.mul(
-		draws[-1],
-		sum(
-			filter(
-				lambda n: n not in draws,
-				(n for row in winner for n in row)
-			)
-		)
-	)
-)
+print(calc_winner_score(*get_draws_and_winner(draw_seq, boards)))
