@@ -9,7 +9,7 @@ INPUT = [
 		map(int, n) for n in
 		(
 			s.strip('\n').replace(' -> ', ',').split(',')
-			for s in open('input', mode='r', encoding='utf-8')
+			for s in open('_input', mode='r', encoding='utf-8')
 		)
 	)
 ]
@@ -50,6 +50,16 @@ print(
 		map(
 			lambda point: 1 if point > 1 else 0,
 			(pt for row in populate_with_lines(orthogonal_only(INPUT)) for pt in row)
+		)
+	)
+)
+
+# part B solution:
+print(
+	sum(
+		map(
+			lambda point: 1 if point > 1 else 0,
+			(pt for row in populate_with_lines(INPUT) for pt in row)
 		)
 	)
 )
