@@ -3,12 +3,7 @@ EXERCISE PROMPT: http://adventofcode.com/2021/day/6
 """
 
 
-INPUT = list(
-	map(
-		int,
-		open('input', mode='r', encoding='utf-8').read().strip('\n').split(',')
-	)
-)
+INPUT = [int(x) for x in open('input', mode='r', encoding='utf-8').read().strip('\n').split(',')]
 
 
 def spawn(fish_model, days=0):
@@ -23,3 +18,6 @@ def spawn(fish_model, days=0):
 
 # part A solution
 print(len(spawn(INPUT, days=80)))
+
+# part B solution
+print(len(spawn(INPUT, days=256)))
