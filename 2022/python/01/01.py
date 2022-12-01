@@ -13,3 +13,6 @@ groups = tuple(
 
 # part A
 print(max(map(sum, groups)))
+
+# part B
+print(sum(sorted(map(sum, groups))[-3:]))
