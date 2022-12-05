@@ -6,39 +6,38 @@
 set -o noclobber
 
 # validator constants -------------------------------------------------------------------
-[[ $(date +"%m") -eq "12" ]] && MAX_YEAR=$(date +"%Y") || MAX_YEAR=$(($(date +"%Y")-1))
-VALID_YEARS=($(seq 2015 1 "$MAX_YEAR"))
+VALID_YEARS=($(seq 2015 1 $(date +"%Y")))
 VALID_ACTIONS=("init")
-declare -A VALID_LANGS
-VALID_LANGS+=(
-	["python"]="py"
-	["scala"]="scala"
-	["rust"]="rs"
-	["typescript"]="ts"
-	["haskell"]="hs"
+declare -A VALID_LANGS=(
 	["go"]="go"
+	["haskell"]="hs"
 	["kotlin"]="kt"
+	["python"]="py"
 	["ruby"]="rb"
+	["rust"]="rs"
+	["scala"]="scala"
+	["typescript"]="ts"
 )
 
 # arg processing ------------------------------------------------------------------------
-ACTION=$1
+ACTION=${1:-"undefined"}
 shift
 PARAMS=(${@})
+[[ ! "(2 3)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} {day_limit:31}\ns"; exit 1; }
 
 # function definitions - GENERAL --------------------------------------------------------
 function validate_membership {
 	INPUT=$1; PRETTY=$2; shift 2; ARRAY=$@
 	if [[ ! "${ARRAY[*]}" =~ "${INPUT}" ]]; then
 		echo "Invalid ${PRETTY}: ${INPUT}"
-		echo "Valid ${PRETTY}s are: [ ${ARRAY[*]} ]"
+		echo "Valid ${PRETTY}s are: [ $(echo "$ARRAY" | tr ' ' '\n' | sort | tr '\n' ' ')]"
 		exit 1
 	fi
 }
 
 # function definitions - HELPERS - init -------------------------------------------------
 function get_template_for_lang {
-	YEAR=$1; LANG=$2; DAY=$3
+	LANG=$1 YEAR=$2 DAY=$3
 	CONTENT="EXERCISE PROMPT: http://adventofcode.com/${YEAR}/day/$(sed 's/^0*//' <<< $DAY)"
 	case $LANG in
 		python)
@@ -57,25 +56,25 @@ function get_template_for_lang {
 }
 
 function generate_for_language {
-	YEAR=$1; LANG=$2
-	for DAY in {01..31}
+	LANG=$1 YEAR=$2 DAY_LIMIT=${3:-"31"}
+	for DAY in $(seq -f "%02g" 01 "$DAY_LIMIT")
 	do
-		DAY_PATH="${YEAR}/${LANG}/${DAY}"
+		DAY_PATH="${LANG}/${YEAR}/${DAY}"
 		mkdir -pv $DAY_PATH
 		touch "${DAY_PATH}/input"
-		get_template_for_lang $YEAR $LANG $DAY > "$DAY_PATH/$DAY.${VALID_LANGS[${LANG}]}"
+		get_template_for_lang $LANG $YEAR $DAY > "$DAY_PATH/$DAY.${VALID_LANGS[${LANG}]}"
 	done
 }
 
 # function definitions - ACTIONS --------------------------------------------------------
 function action_init {
-	[[ ! "${#PARAMS[@]}" -eq 2 ]] && { echo "Try: aoc init {year} {language}"; exit 1; }
-	YEAR="${PARAMS[0]}"
-	LANG="${PARAMS[1]}"
-	validate_membership $YEAR "year" ${VALID_YEARS[*]}
+	LANG="${PARAMS[0]}"
+	YEAR="${PARAMS[1]}"
+	DAY_LIMIT="${PARAMS[2]}"
 	validate_membership $LANG "language" ${!VALID_LANGS[@]}
-	generate_for_language $YEAR $LANG
-	echo "Finished generating for: [ $LANG@$YEAR ]"
+	validate_membership $YEAR "year" ${VALID_YEARS[*]}
+	generate_for_language $LANG $YEAR $DAY_LIMIT
+	echo "Finished generating for: [ $LANG @ $YEAR ]"
 }
 
 # execution  ----------------------------------------------------------------------------
