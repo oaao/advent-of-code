@@ -1,2 +1,6 @@
-# conventional name for sample inputs
+# aoc
 sample
+
+# python
+.mypy_cache
+.flake8
