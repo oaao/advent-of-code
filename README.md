@@ -1,29 +1,30 @@
-Advent of Code exercises as found on http://adventofcode.com/.
+# advent-of-code
+
+Advent of Code exercises as found on <http://adventofcode.com/>.
 
 ---
 
-If you're here just for `aoc` (the CLI utility in project root),
+Also provides the binary `aoc` for templating out paths and exercises:
 
 ```bash
-$ ./aoc init {year} {language} 
+$ ./aoc init <language> <year> [max_day]
 ```
 
-`aoc init` generates the complete set of directories & daily exercise templates and blank input files, including adding language-appropriate header comments containing each exercise URL.
+`aoc init` generates directories, exercise templates with language-appropriate headers, and blank input files.
 
+>The utility cannot overwrite (it will first `set -o noclobber` as a failsafe).
+>
+>Edit `VALID_LANGS` and `EXTENSIONS` as necessary for your desired languages.
 
 ```bash
-$ ./aoc init 2021 python
+$ ./aoc init python 2021
 # ...
-$ ls 2021/python | wc -l
+$ ls python/2021 | wc -l
 31
-$ ls 2021/python/01
+$ ls python/2021/01
 01.py  input
-$ cat 2021/python/01/01.py
+$ cat python/2021/01/01.py
 """
 EXERCISE PROMPT: http://adventofcode.com/2021/day/1
 """
 ```
-
-Edit `VALID_LANGS` and `EXTENSIONS` as necessary for your desired languages (implemented to safeguard against typos).
-
-The utility does not overwrite (in fact, as a failsafe, it `set -o noclobber` before anything else). 
