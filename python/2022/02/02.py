@@ -2,24 +2,18 @@
 EXERCISE PROMPT: http://adventofcode.com/2022/day/2
 """
 
-INPUT = (
-    tuple(map(int, s.split(" ")))
-    for s in
-    open("input", mode="r", encoding="utf-8")
-    .read()
-    .strip("\n")
-    .translate(str.maketrans("AXBYCZ", "112233"))
-    .split("\n")
+INPUT = tuple(open("input", mode="r", encoding="utf-8").read().strip("\n").split("\n"))
+case_groups = (
+    ("C X", "A Y", "B Z"),
+    ("A X", "B Y", "C Z"),
+    ("B X", "C Y", "A Z"),
 )
-what_beats = {3: 1, 1: 2, 2: 3}
 
-score = 0
-for you, me in INPUT:
-    score += me
-    if what_beats[you] == me:
-        score += 6
-    elif you == me:
-        score += 3
-
-# part A solution
-print(score)
+# part A solution — case rows are win/tie/loss respectively
+scoring = {
+    # map(ord, ("X", "Y", "Z")) -> (88, 89, 90)
+    case: n + ord(case[-1]) - 87
+    for case_group, n in zip(case_groups, (6, 3, 0))
+    for case in case_group
+}
+print(sum(map(lambda case: scoring[case], INPUT)))
