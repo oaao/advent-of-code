@@ -13,7 +13,7 @@ as_priorities = tuple(
     ) for s in INPUT
 )
 
-# part A solution: we can use sets, since we want type occurrence not instance occurrence  
+# part A solution: we can use sets, since we want type occurrence not instance occurrence
 print(
     sum(
         next(iter(
@@ -21,3 +21,14 @@ print(
         )) for ruck in as_priorities
     )
 )
+
+# part B solution:
+grouped = zip(*(iter(as_priorities),) * 3)
+print(
+    sum(
+        next(iter(
+            set.intersection(*map(set, group))
+        )) for group in grouped
+    )
+)
+
