@@ -62,6 +62,7 @@ function generate_for_language {
 		DAY_PATH="${WORKTREE_BASE}/${LANG}/${YEAR}/${DAY}"
 		mkdir -pv $DAY_PATH
 		touch "${DAY_PATH}/input"
+		touch "${DAY_PATH}/sample"
 		get_template_for_lang $LANG $YEAR $DAY > "$DAY_PATH/$DAY.${VALID_LANGS[${LANG}]}"
 	done
 }
