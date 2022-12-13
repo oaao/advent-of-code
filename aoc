@@ -56,8 +56,8 @@ function get_template_for_lang {
 }
 
 function generate_for_language {
-	LANG=$1 YEAR=$2 DAY_LIMIT=${3:-"31"}
-	for DAY in $(seq -f "%02g" 01 "$DAY_LIMIT")
+	LANG=$1 YEAR=$2 FROM_DAY=${3:-"1"} TO_DAY=${4:-"31"}
+	for DAY in $(seq -f "%02g" "$FROM_DAY" "$TO_DAY")
 	do
 		DAY_PATH="${WORKTREE_BASE}/${LANG}/${YEAR}/${DAY}"
 		mkdir -pv $DAY_PATH
@@ -71,11 +71,12 @@ function generate_for_language {
 function action_init {
 	LANG="${PARAMS[0]}"
 	YEAR="${PARAMS[1]}"
-	DAY_LIMIT="${PARAMS[2]}"
-	[[ $ACTION == "init" ]] && [[ ! "(2 3)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} [day_limit:31]\n"; exit 1; }
+	START_DAY="${PARAMS[2]}"
+	END_DAY="${PARAMS[3]}"
+	[[ $ACTION == "init" ]] && [[ ! "(2 4)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} [from_day:1] [to_day:31]\n"; exit 1; }
 	validate_membership $LANG "language" ${!VALID_LANGS[@]}
 	validate_membership $YEAR "year" ${VALID_YEARS[*]}
-	generate_for_language $LANG $YEAR $DAY_LIMIT
+	generate_for_language $LANG $YEAR $START_DAY $END_DAY
 	echo "Finished generating for: [ $LANG @ $YEAR ]"
 }
 
