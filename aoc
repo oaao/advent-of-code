@@ -8,7 +8,7 @@ set -o noclobber
 # validator constants -------------------------------------------------------------------
 WORKTREE_BASE="$(git rev-parse --show-toplevel)"
 VALID_YEARS=($(seq 2015 1 $(date +"%Y")))
-VALID_ACTIONS=("init" "git")
+VALID_ACTIONS=("init" "git" "next")
 declare -A VALID_LANGS=(
 	["go"]="go"
 	["haskell"]="hs"
@@ -69,6 +69,14 @@ function generate_for_language {
 
 
 # function definitions - ACTIONS --------------------------------------------------------
+CURRENT_DIR="$(pwd)"
+SUBPATH="${CURRENT_DIR#"$WORKTREE_BASE"}"
+SUBPATH_ARR=(${SUBPATH//"/"/" "})
+
+CURRENT_LANG=${SUBPATH_ARR[0]}
+CURRENT_YEAR=${SUBPATH_ARR[1]}
+CURRENT_DAY=${SUBPATH_ARR[2]}
+
 function action_init {
 	LANG="${PARAMS[0]}"
 	YEAR="${PARAMS[1]}"
@@ -91,11 +99,15 @@ function action_git {
 		*)
 			SYMBOL="Δ";;
 	esac
-	CURRENT_DIR="$(pwd)"
-	SUBPATH="${CURRENT_DIR#"$WORKTREE_BASE"}"
-	ARR=(${SUBPATH//"/"/" "})
-	MSG="${SYMBOL} [${ARR[1]}, ${ARR[2]}] ${VALID_LANGS[${ARR[0]}]} — ${COMMENT}"
+	MSG="${SYMBOL} [${CURRENT_YEAR}, ${CURRENT_DAY}] ${VALID_LANGS[${CURRENT_LANG}]} — ${COMMENT}"
 	git add . && git commit -m "$MSG"
+}
+
+function action_next {
+	NEXT_DAY="$(printf "%02d" $(("$CURRENT_DAY" + 1)))"
+	[[ ! -z $CURRENT_LANG ]] && [[ ! -z $CURRENT_YEAR ]] && [[ ! -z $CURRENT_DAY ]] \
+	&& generate_for_language "$CURRENT_LANG" "$CURRENT_YEAR" "$NEXT_DAY" "$NEXT_DAY" \
+	|| echo "Could not determine current place in subpath: ${SUBPATH:-"./"}"
 }
 
 
