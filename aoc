@@ -6,8 +6,9 @@
 set -o noclobber
 
 # validator constants -------------------------------------------------------------------
+WORKTREE_BASE="$(git rev-parse --show-toplevel)"
 VALID_YEARS=($(seq 2015 1 $(date +"%Y")))
-VALID_ACTIONS=("init")
+VALID_ACTIONS=("init" "git")
 declare -A VALID_LANGS=(
 	["go"]="go"
 	["haskell"]="hs"
@@ -23,7 +24,8 @@ declare -A VALID_LANGS=(
 ACTION=${1:-"undefined"}
 shift
 PARAMS=(${@})
-[[ ! "(2 3)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} {day_limit:31}\ns"; exit 1; }
+[[ $ACTION == "init" ]] && [[ ! "(2 3)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} [day_limit:31]\n"; exit 1; }
+[[ $ACTION == "git" ]] && [[ ! "(1 2)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc git {add|*} {comment}\n"; exit 1; }
 
 # function definitions - GENERAL --------------------------------------------------------
 function validate_membership {
@@ -59,12 +61,13 @@ function generate_for_language {
 	LANG=$1 YEAR=$2 DAY_LIMIT=${3:-"31"}
 	for DAY in $(seq -f "%02g" 01 "$DAY_LIMIT")
 	do
-		DAY_PATH="${LANG}/${YEAR}/${DAY}"
+		DAY_PATH="${WORKTREE_BASE}/${LANG}/${YEAR}/${DAY}"
 		mkdir -pv $DAY_PATH
 		touch "${DAY_PATH}/input"
 		get_template_for_lang $LANG $YEAR $DAY > "$DAY_PATH/$DAY.${VALID_LANGS[${LANG}]}"
 	done
 }
+
 
 # function definitions - ACTIONS --------------------------------------------------------
 function action_init {
@@ -76,6 +79,23 @@ function action_init {
 	generate_for_language $LANG $YEAR $DAY_LIMIT
 	echo "Finished generating for: [ $LANG @ $YEAR ]"
 }
+
+function action_git {
+	PSEUDOGIT="${PARAMS[0]}"
+	COMMENT="${PARAMS[1]}"
+	case $PSEUDOGIT in
+		add)
+			SYMBOL="+";;
+		*)
+			SYMBOL="Δ";;
+	esac
+	CURRENT_DIR="$(pwd)"
+	SUBPATH="${CURRENT_DIR#"$WORKTREE_BASE"}"
+	ARR=(${SUBPATH//"/"/" "})
+	MSG="${SYMBOL} [${ARR[1]}, ${ARR[2]}] ${VALID_LANGS[${ARR[0]}]} — ""$COMMENT"
+	git add . && git commit -m "$MSG"
+}
+
 
 # execution  ----------------------------------------------------------------------------
 validate_membership $ACTION "action" ${VALID_ACTIONS[*]}
