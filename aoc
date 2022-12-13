@@ -37,9 +37,9 @@ function validate_membership {
 
 # function definitions - HELPERS - init -------------------------------------------------
 function get_template_for_lang {
-	LANG=$1 YEAR=$2 DAY=$3
+	AOC_LANG=$1 YEAR=$2 DAY=$3
 	CONTENT="EXERCISE PROMPT: http://adventofcode.com/${YEAR}/day/$(sed 's/^0*//' <<< $DAY)"
-	case $LANG in
+	case $AOC_LANG in
 		python)
 			printf '"""\n'"${CONTENT}"'\n"""\n'
 			;;
@@ -56,14 +56,14 @@ function get_template_for_lang {
 }
 
 function generate_for_language {
-	LANG=$1 YEAR=$2 FROM_DAY=${3:-"1"} TO_DAY=${4:-"31"}
+	AOC_LANG=$1 YEAR=$2 FROM_DAY=${3:-"1"} TO_DAY=${4:-"31"}
 	for DAY in $(seq -f "%02g" "$FROM_DAY" "$TO_DAY")
 	do
-		DAY_PATH="${WORKTREE_BASE}/${LANG}/${YEAR}/${DAY}"
+		DAY_PATH="${WORKTREE_BASE}/${AOC_LANG}/${YEAR}/${DAY}"
 		mkdir -pv $DAY_PATH
 		touch "${DAY_PATH}/input"
 		touch "${DAY_PATH}/sample"
-		get_template_for_lang $LANG $YEAR $DAY > "$DAY_PATH/$DAY.${VALID_LANGS[${LANG}]}"
+		get_template_for_lang $AOC_LANG $YEAR $DAY > "$DAY_PATH/$DAY.${VALID_LANGS[${AOC_LANG}]}"
 	done
 }
 
@@ -73,20 +73,20 @@ CURRENT_DIR="$(pwd)"
 SUBPATH="${CURRENT_DIR#"$WORKTREE_BASE"}"
 SUBPATH_ARR=(${SUBPATH//"/"/" "})
 
-CURRENT_LANG=${SUBPATH_ARR[0]}
+CURRENT_AOC_LANG=${SUBPATH_ARR[0]}
 CURRENT_YEAR=${SUBPATH_ARR[1]}
 CURRENT_DAY=${SUBPATH_ARR[2]}
 
 function action_init {
-	LANG="${PARAMS[0]}"
+	AOC_LANG="${PARAMS[0]}"
 	YEAR="${PARAMS[1]}"
 	START_DAY="${PARAMS[2]}"
 	END_DAY="${PARAMS[3]}"
 	[[ $ACTION == "init" ]] && [[ ! "(2 4)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} [from_day:1] [to_day:31]\n"; exit 1; }
-	validate_membership $LANG "language" ${!VALID_LANGS[@]}
+	validate_membership $AOC_LANG "language" ${!VALID_LANGS[@]}
 	validate_membership $YEAR "year" ${VALID_YEARS[*]}
-	generate_for_language $LANG $YEAR $START_DAY $END_DAY
-	echo "Finished generating for: [ $LANG @ $YEAR ]"
+	generate_for_language $AOC_LANG $YEAR $START_DAY $END_DAY
+	echo "Finished generating for: [ $AOC_LANG @ $YEAR ]"
 }
 
 function action_git {
@@ -99,15 +99,18 @@ function action_git {
 		*)
 			SYMBOL="Δ";;
 	esac
-	MSG="${SYMBOL} [${CURRENT_YEAR}, ${CURRENT_DAY}] ${VALID_LANGS[${CURRENT_LANG}]} — ${COMMENT}"
+	MSG="${SYMBOL} [${CURRENT_YEAR}, ${CURRENT_DAY}] ${VALID_LANGS[${CURRENT_AOC_LANG}]} — ${COMMENT}"
 	git add . && git commit -m "$MSG"
 }
 
 function action_next {
 	NEXT_DAY="$(printf "%02d" $(("$CURRENT_DAY" + 1)))"
-	[[ ! -z $CURRENT_LANG ]] && [[ ! -z $CURRENT_YEAR ]] && [[ ! -z $CURRENT_DAY ]] \
-	&& generate_for_language "$CURRENT_LANG" "$CURRENT_YEAR" "$NEXT_DAY" "$NEXT_DAY" \
+	[[ ! -z $CURRENT_AOC_LANG ]] && [[ ! -z $CURRENT_YEAR ]] && [[ ! -z $CURRENT_DAY ]] \
+	&& generate_for_language "$CURRENT_AOC_LANG" "$CURRENT_YEAR" "$NEXT_DAY" "$NEXT_DAY" \
 	|| echo "Could not determine current place in subpath: ${SUBPATH:-"./"}"
+	# requires {aoc} to be run as {. aoc}
+	cd "${WORKTREE_BASE}/${CURRENT_AOC_LANG}/${CURRENT_YEAR}/${NEXT_DAY}"
+
 }
 
 
