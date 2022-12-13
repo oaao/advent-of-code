@@ -16,7 +16,7 @@ print(
     sum(
         any(
             a1 >= b1 and a2 <= b2
-            for ((a1, a2), (b1, b2)) in itertools.permutations(sorted(line))
+            for ((a1, a2), (b1, b2)) in itertools.permutations(line)
         )
         for line in INPUT
     )
@@ -27,7 +27,7 @@ print(
     sum(
         any(
             set(range(a1, a2 + 1)).intersection(set(range(b1, b2 + 1)))
-            for ((a1, a2), (b1, b2)) in itertools.combinations(sorted(line), 2)
+            for ((a1, a2), (b1, b2)) in itertools.combinations(line, 2)
         )
         for line in INPUT
     )
