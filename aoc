@@ -24,8 +24,6 @@ declare -A VALID_LANGS=(
 ACTION=${1:-"undefined"}
 shift
 PARAMS=(${@})
-[[ $ACTION == "init" ]] && [[ ! "(2 3)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} [day_limit:31]\n"; exit 1; }
-[[ $ACTION == "git" ]] && [[ ! "(1 2)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc git {add|*} {comment}\n"; exit 1; }
 
 # function definitions - GENERAL --------------------------------------------------------
 function validate_membership {
@@ -74,6 +72,7 @@ function action_init {
 	LANG="${PARAMS[0]}"
 	YEAR="${PARAMS[1]}"
 	DAY_LIMIT="${PARAMS[2]}"
+	[[ $ACTION == "init" ]] && [[ ! "(2 3)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc init {lang} {year} [day_limit:31]\n"; exit 1; }
 	validate_membership $LANG "language" ${!VALID_LANGS[@]}
 	validate_membership $YEAR "year" ${VALID_YEARS[*]}
 	generate_for_language $LANG $YEAR $DAY_LIMIT
@@ -82,9 +81,10 @@ function action_init {
 
 function action_git {
 	PSEUDOGIT="${PARAMS[0]}"
-	COMMENT="${PARAMS[1]}"
+	COMMENT="${PARAMS[@]:1}"
+	[[ $ACTION == "git" ]] && [[ ! "(1 2)" =~ ${#PARAMS[@]} ]] && { printf "Try:\n  aoc git {add|*} {comment}\n"; exit 1; }
 	case $PSEUDOGIT in
-		add)
+		"add")
 			SYMBOL="+";;
 		*)
 			SYMBOL="Δ";;
@@ -92,7 +92,7 @@ function action_git {
 	CURRENT_DIR="$(pwd)"
 	SUBPATH="${CURRENT_DIR#"$WORKTREE_BASE"}"
 	ARR=(${SUBPATH//"/"/" "})
-	MSG="${SYMBOL} [${ARR[1]}, ${ARR[2]}] ${VALID_LANGS[${ARR[0]}]} — ""$COMMENT"
+	MSG="${SYMBOL} [${ARR[1]}, ${ARR[2]}] ${VALID_LANGS[${ARR[0]}]} — ${COMMENT}"
 	git add . && git commit -m "$MSG"
 }
 
