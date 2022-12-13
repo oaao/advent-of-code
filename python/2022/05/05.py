@@ -1,9 +1,9 @@
 """
 EXERCISE PROMPT: http://adventofcode.com/2022/day/5
 """
-from itertools import zip_longest
+import copy
 
-INPUT    = tuple(open("sample", "r", encoding="utf-8").read().rstrip().split('\n'))
+INPUT = tuple(open("input", "r", encoding="utf-8").read().rstrip().split("\n"))
 split_at = INPUT.index("")
 
 # process stack into useful input
@@ -18,8 +18,29 @@ instructions = tuple(
     tuple(
         map(
             int,
-            instr.replace("move ", "").replace(" from", "").replace(" to", "").split(" ")
+            instr.replace("move ", "")
+            .replace(" from", "")
+            .replace(" to", "")
+            .split(" "),
         )
     )
-    for instr in INPUT[split_at + 1:]
+    for instr in INPUT[split_at + 1 :]
 )
+
+
+def get_message(one_by_one: bool) -> str:
+    stacks_ = copy.deepcopy(stacks)
+    for n, from_, to_ in instructions:
+        substack = (  # subscribe
+            reversed(stacks_[from_][-n:]) if one_by_one else stacks_[from_][-n:]
+        )
+        stacks_[to_].extend(substack)
+        del stacks_[from_][-n:]
+    return "".join(stack[-1] for stack in stacks_.values())
+
+
+# part A solution
+print(get_message(one_by_one=True))
+
+# part B solution
+print(get_message(one_by_one=False))
